@@ -1,4 +1,4 @@
-#include "img_descriptor.h"
+#include "core/img_descriptor.h"
 
 using namespace std;
 using namespace cv;
@@ -7,8 +7,8 @@ using namespace clany;
 
 FeatureExtractor::FeatureExtractor()
 {
+//     feature_extractors.push_back(make_shared<ProbRGB>());
     feature_extractors.push_back(make_shared<LaplRGB>());
-//    feature_extractors.push_back(make_shared<ProbRGB>());
     feature_extractors.push_back(make_shared<HSVHist>());
     feature_extractors.push_back(make_shared<FourierHist>());
     feature_extractors.push_back(make_shared<HoughHist>());
@@ -61,7 +61,7 @@ void FeatureExtractor::mergeFeature(const vector<vector<vector<float>>>& feature
         const auto& ft_vec = features_src[i];
         auto& ft_dst = features_dst[i];
 
-        int ft_sz = accumulate(ft_vec.begin(), ft_vec.end(), 0, [](int init, const auto& ft) {
+        int ft_sz = accumulate(ft_vec.begin(), ft_vec.end(), 0, [](int init, const vector<float>& ft) {
             return init + ft.size();
         });
         ft_dst.reserve(ft_sz);

@@ -1,4 +1,4 @@
-#include "fourier_hist.h"
+#include "core/fourier_hist.h"
 
 using namespace std;
 using namespace cv;

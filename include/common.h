@@ -1,20 +1,21 @@
 #ifndef COMMON_H
 #define COMMON_H
 
-#include <iostream>
-#include <array>
 #include <vector>
-#include <map>
-#include <numeric>
-#include <algorithm>
+#include <array>
+#include <string>
+#include <iostream>
+#include <memory>
 #include <functional>
+#include <numeric>
 #include <opencv2/opencv.hpp>
-#include "cv/svm.h"
+#include "flora_ident_config.h"
 #include "clany/timer.hpp"
-#include "clany/factory.hpp"
 
 
 _CLANY_BEGIN
+const int CANDIDATES_SIZE = 6;
+
 class ImgFeature
 {
 public:

@@ -1,10 +1,9 @@
 #ifndef MY_WIDGETS_H
 #define MY_WIDGETS_H
 
+#include "common.h"
 #include <memory>
-#include <QHBoxLayout>
 #include <QRubberBand>
-#include <QSizeGrip>
 #include <QLabel>
 #include <QMouseEvent>
 
@@ -20,12 +19,11 @@ public:
 
     void addSizeGrip();
 
+private:
     void mousePressEvent(QMouseEvent *ev)   override;
     void mouseMoveEvent(QMouseEvent *ev)    override;
     void mouseReleaseEvent(QMouseEvent *ev) override;
-
-private:
-    void resizeEvent(QResizeEvent *);
+    void resizeEvent(QResizeEvent *)        override;
 
     QPoint origin;
     QRubberBand* rubberband;
@@ -38,16 +36,16 @@ class ImageLabel : public QLabel
 public:
     explicit ImageLabel(QWidget* parent = 0) : QLabel(parent) {};
 
+    void setImage(const QImage& image);
+    bool getSelectionArea(QRect& area);
+    void clearSelection() { selection_area.reset(nullptr); }
+    float getRatio() { return ratio; };
+
+private:
     void mousePressEvent(QMouseEvent *ev)   override;
     void mouseMoveEvent(QMouseEvent *ev)    override;
     void mouseReleaseEvent(QMouseEvent *ev) override;
 
-    void setImage(const QImage& image);
-
-    bool getSelectionArea(QRect& area);
-    float getRatio() { return ratio; };
-
-private:
     float ratio;
     QImage img;
     QPoint origin;

@@ -1,4 +1,4 @@
-#include "hough_hist.h"
+#include "core/hough_hist.h"
 
 using namespace std;
 using namespace cv;

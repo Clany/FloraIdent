@@ -249,7 +249,7 @@
    <property name="title">
     <string/>
    </property>
-   <widget class="QLabel" name="candidateImageLabel">
+   <widget class="ImageLabel" name="candidateImageLabel_1">
     <property name="geometry">
      <rect>
       <x>20</x>
@@ -268,7 +268,7 @@
      <set>Qt::AlignCenter</set>
     </property>
    </widget>
-   <widget class="QLabel" name="candidateImageLabel_2">
+   <widget class="ImageLabel" name="candidateImageLabel_2">
     <property name="geometry">
      <rect>
       <x>190</x>
@@ -287,7 +287,7 @@
      <set>Qt::AlignCenter</set>
     </property>
    </widget>
-   <widget class="QLabel" name="candidateImageLabel_3">
+   <widget class="ImageLabel" name="candidateImageLabel_3">
     <property name="geometry">
      <rect>
       <x>360</x>
@@ -306,7 +306,7 @@
      <set>Qt::AlignCenter</set>
     </property>
    </widget>
-   <widget class="QLabel" name="candidateImageLabel_5">
+   <widget class="ImageLabel" name="candidateImageLabel_5">
     <property name="geometry">
      <rect>
       <x>190</x>
@@ -325,7 +325,7 @@
      <set>Qt::AlignCenter</set>
     </property>
    </widget>
-   <widget class="QLabel" name="candidateImageLabel_6">
+   <widget class="ImageLabel" name="candidateImageLabel_6">
     <property name="geometry">
      <rect>
       <x>360</x>
@@ -344,7 +344,7 @@
      <set>Qt::AlignCenter</set>
     </property>
    </widget>
-   <widget class="QLabel" name="candidateImageLabel_4">
+   <widget class="ImageLabel" name="candidateImageLabel_4">
     <property name="geometry">
      <rect>
       <x>20</x>
@@ -401,6 +401,9 @@
        <property name="text">
         <string>U</string>
        </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
       </widget>
      </item>
     </layout>
@@ -442,6 +445,9 @@
        </property>
        <property name="text">
         <string>U</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
        </property>
       </widget>
      </item>
@@ -485,6 +491,9 @@
        <property name="text">
         <string>U</string>
        </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
       </widget>
      </item>
     </layout>
@@ -526,6 +535,9 @@
        </property>
        <property name="text">
         <string>U</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
        </property>
       </widget>
      </item>
@@ -569,6 +581,9 @@
        <property name="text">
         <string>U</string>
        </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
       </widget>
      </item>
     </layout>
@@ -610,6 +625,9 @@
        </property>
        <property name="text">
         <string>U</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
        </property>
       </widget>
      </item>

@@ -1,4 +1,4 @@
-#include "color_hist.h"
+#include "core/color_hist.h"
 
 using namespace std;
 using namespace placeholders;

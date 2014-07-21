@@ -1,4 +1,6 @@
 #include <QCursor>
+#include <QHBoxLayout>
+#include <QSizeGrip>
 #include "my_widgets.h"
 
 //////////////////////////////////////////////////////////////////////////
@@ -48,7 +50,6 @@ void ImageLabel::mousePressEvent(QMouseEvent *ev)
     origin = ev->pos();
 
     selection_area.reset(new SelectionArea(this));
-    selection_area->setGeometry(QRect(origin, QSize()));
 }
 
 void ImageLabel::mouseMoveEvent(QMouseEvent *ev)
