@@ -37,10 +37,9 @@ template <typename Iterator>
 struct IteratorTraits<Iterator, true>
 {
     using value_type        = typename iterator_traits<Iterator>::value_type;
-    using reference         = typename iterator_traits<Iterator>::reference;
     using pointer           = typename iterator_traits<Iterator>::pointer;
+    using reference         = typename iterator_traits<Iterator>::reference;
     using iterator_category = typename iterator_traits<Iterator>::iterator_category;
-    using distance_type     = typename iterator_traits<Iterator>::distance_type;
     using difference_type   = typename iterator_traits<Iterator>::difference_type;
 };
 

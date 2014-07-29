@@ -11,7 +11,7 @@ using namespace placeholders;
 class KNN : public cv::KNearest
 {
 public:
-    using CvKNearest::CvKNearest;
+    /*using CvKNearest::CvKNearest;*/   // Inheriting constructor
 
     using DistFunc = function<double(cv::InputArray, cv::InputArray)>;
 

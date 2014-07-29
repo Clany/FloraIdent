@@ -4,6 +4,7 @@
 #include "Eigen/Sparse"
 #include <opencv2/core/eigen.hpp>
 #include "core/flora_ident.h"
+#include "clany/timer.hpp"
 
 using namespace std;
 using namespace cv;

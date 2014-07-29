@@ -11,7 +11,6 @@
 #include <chrono>
 #include <opencv2/opencv.hpp>
 #include "flora_ident_config.h"
-#include "clany/timer.hpp"
 #include "clany/traits.hpp"
 
 
