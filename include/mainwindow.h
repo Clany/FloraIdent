@@ -22,10 +22,6 @@ public:
 private:
     void showCandidates();
 
-    void matToQImage(const cv::Mat& src, QImage& dst);
-    template<typename InputIterator, typename OutputIterator>
-    void matToQImage(InputIterator first, InputIterator last, OutputIterator result);
-
 private slots:
     void on_loadDatasetButton_clicked();
 

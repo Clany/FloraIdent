@@ -1,4 +1,5 @@
 #include <QFileDialog>
+#include <QButtonGroup>
 #include "mainwindow.h"
 
 using namespace std;
@@ -9,12 +10,29 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui.setupUi(this);
 
+    ui.candidateGroup->layout()->setAlignment(ui.updateCandidatesButton, Qt::AlignCenter);
+
+    auto addRadioButtonGroup = [this](QRadioButton* similar,
+                                      QRadioButton* dissimilar,
+                                      QRadioButton* unknown) {
+        QButtonGroup* bg = new QButtonGroup(this);
+        bg->addButton(similar);
+        bg->addButton(dissimilar);
+        bg->addButton(unknown);
+        unknown->setChecked(true);
+    };
+
+    addRadioButtonGroup(ui.candSimilar_1, ui.candDissimilar_1, ui.candUnknown_1);
+    addRadioButtonGroup(ui.candSimilar_2, ui.candDissimilar_2, ui.candUnknown_2);
+    addRadioButtonGroup(ui.candSimilar_3, ui.candDissimilar_3, ui.candUnknown_3);
+    addRadioButtonGroup(ui.candSimilar_4, ui.candDissimilar_4, ui.candUnknown_4);
+    addRadioButtonGroup(ui.candSimilar_5, ui.candDissimilar_5, ui.candUnknown_5);
+    addRadioButtonGroup(ui.candSimilar_6, ui.candDissimilar_6, ui.candUnknown_6);
 }
 
 MainWindow::~MainWindow()
-{
+{}
 
-}
 
 void MainWindow::showCandidates()
 {
@@ -24,26 +42,14 @@ void MainWindow::showCandidates()
     ui.candidateImageLabel_4->setImage(candidates[3]);
     ui.candidateImageLabel_5->setImage(candidates[4]);
     ui.candidateImageLabel_6->setImage(candidates[5]);
+    ui.horizontalLayout_7->setAlignment(ui.candidateImageLabel_1, Qt::AlignCenter);
+    ui.horizontalLayout_7->setAlignment(ui.candidateImageLabel_2, Qt::AlignCenter);
+    ui.horizontalLayout_7->setAlignment(ui.candidateImageLabel_3, Qt::AlignCenter);
+    ui.horizontalLayout_9->setAlignment(ui.candidateImageLabel_4, Qt::AlignCenter);
+    ui.horizontalLayout_9->setAlignment(ui.candidateImageLabel_5, Qt::AlignCenter);
+    ui.horizontalLayout_9->setAlignment(ui.candidateImageLabel_6, Qt::AlignCenter);
 }
 
-void MainWindow::matToQImage(const cv::Mat& src, QImage& dst)
-{
-    cv::Mat rgb;
-    cvtColor(src, rgb, CV_BGR2RGB);
-
-    QImage tmp(rgb.data, rgb.cols, src.rows, rgb.step, QImage::Format_RGB888);
-    dst = tmp.copy();
-}
-
-template<typename InputIterator, typename OutputIterator>
-void MainWindow::matToQImage(InputIterator first, InputIterator last, OutputIterator result)
-{
-    while (first != last) {
-        matToQImage(*first, *result);
-        ++first;
-        ++result;
-    }
-}
 //////////////////////////////////////////////////////////////////////////
 // Callback functions
 void MainWindow::on_loadDatasetButton_clicked()
@@ -70,6 +76,7 @@ void MainWindow::on_loadImageButton_clicked()
     if (!fn.isEmpty()) {
         flora_app.loadQueryImg(fn.toStdString());
         ui.queryImageLabel->setImage(QImage(fn));
+        ui.queryGroup->layout()->setAlignment(ui.queryImageLabel, Qt::AlignCenter);
         ui.queryImageLabel->clearSelection();
         ui.queryImageLabel->setDisabled(false);
         ui.selectButton->setDisabled(false);
@@ -107,10 +114,10 @@ void MainWindow::on_generateCandidatesButton_clicked()
     ui.outputPanel->moveCursor(QTextCursor::End);
     ui.outputPanel->insertPlainText("done.");
 
-//     const auto& cands = flora_app.getCandidates();
-//     matToQImage(cands.begin(), cands.end(), candidates.begin());
-//     showCandidates();
+    flora_app.getCandidates(candidates);
+    showCandidates();
 
+    ui.candidateGroup->setDisabled(false);
     ui.updateCandidatesButton->setDisabled(false);
     ui.finishButton->setDisabled(false);
 }
@@ -119,29 +126,28 @@ void MainWindow::on_updateCandidatesButton_clicked()
 {
     vector<int> user_resp(6, 0);
     if (!ui.candUnknown_1->isChecked()) {
-        user_resp[0] = ui.canSimilar_1->isChecked() ? 1 : -1;
+        user_resp[0] = ui.candSimilar_1->isChecked() ? 1 : -1;
     }
     if (!ui.candUnknown_2->isChecked()) {
-        user_resp[1] = ui.canSimilar_2->isChecked() ? 1 : -1;
+        user_resp[1] = ui.candSimilar_2->isChecked() ? 1 : -1;
     }
     if (!ui.candUnknown_3->isChecked()) {
-        user_resp[2] = ui.canSimilar_3->isChecked() ? 1 : -1;
+        user_resp[2] = ui.candSimilar_3->isChecked() ? 1 : -1;
     }
     if (!ui.candUnknown_4->isChecked()) {
-        user_resp[3] = ui.canSimilar_4->isChecked() ? 1 : -1;
+        user_resp[3] = ui.candSimilar_4->isChecked() ? 1 : -1;
     }
     if (!ui.candUnknown_5->isChecked()) {
-        user_resp[4] = ui.canSimilar_5->isChecked() ? 1 : -1;
+        user_resp[4] = ui.candSimilar_5->isChecked() ? 1 : -1;
     }
     if (!ui.candUnknown_6->isChecked()) {
-        user_resp[5] = ui.canSimilar_6->isChecked() ? 1 : -1;
+        user_resp[5] = ui.candSimilar_6->isChecked() ? 1 : -1;
     }
 
     flora_app.updateCandidates(user_resp);
 
-//     const auto& cands = flora_app.getCandidates();
-//     matToQImage(cands.begin(), cands.end(), candidates.begin());
-//     showCandidates();
+    flora_app.getCandidates(candidates);
+    showCandidates();
 }
 
 void MainWindow::on_finishButton_clicked()
@@ -149,6 +155,7 @@ void MainWindow::on_finishButton_clicked()
     string result = flora_app.getResult();
     ui.outputPanel->append((string("Final result: ") + result).c_str());
 
+    ui.candidateGroup->setDisabled(true);
     ui.generateCandidatesButton->setDisabled(true);
     ui.updateCandidatesButton->setDisabled(true);
     ui.finishButton->setDisabled(true);

@@ -1,6 +1,7 @@
 #include <QCursor>
 #include <QHBoxLayout>
 #include <QSizeGrip>
+#include <QGroupBox>
 #include "my_widgets.h"
 
 //////////////////////////////////////////////////////////////////////////
@@ -68,15 +69,19 @@ void ImageLabel::mouseReleaseEvent(QMouseEvent *ev)
 
 void ImageLabel::setImage(const QImage& image)
 {
-    ratio = (float)size().height() / image.height();
+    if (org_sz.isEmpty()) org_sz = size();
+    setMaximumSize(org_sz);
+    resize(org_sz);
+
+    float h_ratio = (float)size().height() / image.height();
+    float w_ratio = (float)size().width()  / image.width();
+    ratio = w_ratio < h_ratio ? w_ratio : h_ratio;
 
     img = image.scaled(image.size() * ratio,
                        Qt::IgnoreAspectRatio,
                        Qt::SmoothTransformation);
 
     setPixmap(QPixmap::fromImage(img));
-    setGeometry(pos().x() + (width() - img.width()) / 2, pos().y(), width(), height());
-    resize(pixmap()->size());
 }
 
 bool ImageLabel::getSelectionArea(QRect& area)

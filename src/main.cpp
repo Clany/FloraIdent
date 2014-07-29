@@ -1,18 +1,19 @@
 #include "common.h"
 #if USE_QT_VER >= 5
-  #include <QtWidgets/QApplication>
+ #include <QtWidgets/QApplication>
 #else
-  #include <QtGui/QApplication>
+ #include <QtGui/QApplication>
 #endif
 #include "mainwindow.h"
 
 using namespace std;
+using namespace cv;
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
-    MainWindow w;
-    w.show();
+   QApplication app(argc, argv);
+   MainWindow w;
+   w.show();
 
-    return a.exec();
+   return app.exec();
 }

@@ -4,6 +4,7 @@
 #include "common.h"
 #include "core/img_descriptor.h"
 #include "core/svm.h"
+#include "core/knn.h"
 
 _CLANY_BEGIN
 struct TrainSet
@@ -16,24 +17,41 @@ struct TrainSet
 class FloraIdent
 {
 public:
-    void loadTrainSet(const string& dir);
+    void loadTrainSet(const string& dir, bool has_precompute_fts = false);
     void setTestImg(const cv::Mat& src);
+    void getCandidates(array<cv::Mat, CANDIDATES_SIZE>& candidates);
 
     void genTrainFeatures();
     void genTestFeatures();
-    void updateCandidates();
+    void updateCandidates(const vector<int>& user_resp);
     string predict();
 
-private:
+    void clearData();
+
+public:
+    void initDistMat();
+    int updateDistMat(const cv::Mat& x1, int y1, const cv::Mat& x2, int y2, double lambda = 1);
+    void nearestSPD(const cv::Mat& src, cv::Mat& dst);
+
+    template<typename T>
+    typename enable_if<is_floating_point<T>::value, T>::type
+    eps(T val)
+    {
+        return nextafter(val, numeric_limits<T>::max()) - val;
+    };
+
     vector<string> cat_set;
     TrainSet train_set;
+
     cv::Mat train_fts;
+    vector<int> cand_idx;
 
     cv::Mat test_img;
     cv::Mat test_ft;
 
     vector<ml::SVM> svm_set;
-    cv::KNearest classifier;
+    ml::KNN classifier;
+    cv::Mat dist_mat;
 };
 _CLANY_END
 

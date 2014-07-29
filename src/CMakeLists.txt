@@ -9,6 +9,7 @@ set(SRC_LIST
   core/img_descriptor.cpp
   core/libsvm.cpp
   core/svm.cpp
+  core/knn.cpp
   core/flora_ident.cpp
 )
 set(HEADER_LIST

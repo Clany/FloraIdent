@@ -2,7 +2,7 @@
 #define SVM_H
 
 #include <memory>
-#include <opencv2/opencv.hpp>
+#include <opencv2/ml/ml.hpp>
 #include "clany/clany_macros.h"
 
 #define _DENSE_REP
@@ -29,6 +29,7 @@ class SVM
 {
 public:
     SVM() : model_ptr(nullptr, SVMModelDeletor()) {}
+    SVM(const string& file_name) { readModel(file_name); }
 
     enum { C_SVC, NU_SVC, ONE_CLASS, EPSILON_SVR, NU_SVR };	/* svm_type */
     enum { LINEAR, POLY, RBF, SIGMOID, PRECOMPUTED }; /* kernel_type */
@@ -42,6 +43,9 @@ public:
 
     double predict(cv::InputArray sample, vector<double>& vals, bool return_prob_val = false) const;
     double predict(const SVMNode& sample, double* vals, bool return_prob_val = false) const;
+
+    void writeModel(const string& file_name) const;
+    void readModel(const string& file_name);
 
 private:
     cv::Mat train_mat;

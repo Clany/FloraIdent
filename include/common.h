@@ -8,13 +8,16 @@
 #include <memory>
 #include <functional>
 #include <numeric>
+#include <chrono>
 #include <opencv2/opencv.hpp>
 #include "flora_ident_config.h"
 #include "clany/timer.hpp"
+#include "clany/traits.hpp"
 
 
 _CLANY_BEGIN
 const int CANDIDATES_SIZE = 6;
+const uint RAND_SEED = chrono::system_clock::now().time_since_epoch().count();
 
 class ImgFeature
 {

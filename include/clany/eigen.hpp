@@ -44,10 +44,11 @@ typedef Matrix<double, 3, 4> Matrix34d;
 
 //////////////////////////////////////////////////////////////////////////
 template<typename T, int M>
-inline void CholeskyDecomp(const Matrix_<T, M, M>& A, Matrix_<T, M, M>& K)
+inline bool CholeskyDecomp(const Matrix_<T, M, M>& A, Matrix_<T, M, M>& K)
 {
     LLT<Matrix_<T, M, M>> kkt(A);
     K = kkt.matrixL();
+    return A.isApprox(kkt.reconstructedMatrix());
 }
 
 

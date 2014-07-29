@@ -97,3 +97,15 @@ double SVM::predict(const SVMNode& sample, double* vals, bool return_prob_val) c
     }
     return svm_predict_values(model_ptr.get(), &sample, vals);
 }
+
+
+void SVM::writeModel(const string& file_name) const
+{
+    svm_save_model(file_name.c_str(), model_ptr.get());
+}
+
+
+void SVM::readModel(const string& file_name)
+{
+    model_ptr.reset(svm_load_model(file_name.c_str()), SVMModelDeletor());
+}

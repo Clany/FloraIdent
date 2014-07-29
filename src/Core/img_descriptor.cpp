@@ -7,7 +7,16 @@ using namespace clany;
 
 FeatureExtractor::FeatureExtractor()
 {
-//     feature_extractors.push_back(make_shared<ProbRGB>());
+
+// #ifndef NDEBUG
+//     feature_extractors.push_back(make_shared<HSVHist>());
+// #else
+//     /*feature_extractors.push_back(make_shared<ProbRGB>());*/
+//     feature_extractors.push_back(make_shared<LaplRGB>());
+//     feature_extractors.push_back(make_shared<HSVHist>());
+//     feature_extractors.push_back(make_shared<FourierHist>());
+//     feature_extractors.push_back(make_shared<HoughHist>());
+// #endif
     feature_extractors.push_back(make_shared<LaplRGB>());
     feature_extractors.push_back(make_shared<HSVHist>());
     feature_extractors.push_back(make_shared<FourierHist>());

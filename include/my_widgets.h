@@ -47,6 +47,7 @@ private:
     void mouseReleaseEvent(QMouseEvent *ev) override;
 
     float ratio;
+    QSize org_sz;
     QImage img;
     QPoint origin;
     SelectionArea::Ptr selection_area;
