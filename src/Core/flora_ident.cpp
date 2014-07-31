@@ -1,5 +1,6 @@
 #include <random>
 #include <cmath>
+#include <QDir>
 #include "clany/eigen.hpp"
 #include "Eigen/Sparse"
 #include <opencv2/core/eigen.hpp>
@@ -19,25 +20,29 @@ const double MAX_DOUBLE = numeric_limits<double>::max();
 
 void FloraIdent::loadTrainSet(const string& dir, bool has_precompute_fts)
 {
-    auto loc_vec = Directory::GetListFolders(dir);
+    QDir curr_dir(dir.c_str());
+    auto loc_list = curr_dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
     int label = 0;
-    for (const auto& loc : loc_vec) {
-        auto cat_vec = Directory::GetListFolders(loc);
-        for (const auto& cat : cat_vec) {
-            auto files = Directory::GetListFiles(cat);
-            for (const auto& fn : files) {
-                train_set.data.push_back(imread(fn));
+    for (const auto& loc : loc_list) {
+        QDir cat_dir(curr_dir.filePath(loc));
+        auto cat_list = cat_dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
+        for (const auto& cat : cat_list) {
+            QDir file_dir(cat_dir.filePath(cat));
+            auto file_list = file_dir.entryList(QDir::Files);
+            for (const auto& fn : file_list) {
+                train_set.data.push_back(imread(file_dir.filePath(fn).toStdString()));
                 train_set.labels.push_back(label);
             }
-            cat_set.push_back(cat.substr(cat.rfind("_") + 1));
+            cat_set.push_back(cat.toStdString());
             ++label;
         }
     }
     // Load precompute features if exist
     if (has_precompute_fts) {
-        string updir = dir.substr(0, dir.rfind("/"));
-        auto files = Directory::GetListFiles(updir);
-        for (const auto& file : files) {
+        curr_dir.cdUp();
+        auto file_list = curr_dir.entryList(QDir::Files);
+        for (const auto& fn : file_list) {
+            auto file = curr_dir.filePath(fn).toStdString();
             if (file.find("train_features.xml") != string::npos) {
                 FileStorage ifs(file, FileStorage::READ);
                 read(ifs["features"], train_fts);
