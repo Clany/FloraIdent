@@ -1,3 +1,4 @@
+#include <QDir>
 #include "flora_ident_app.h"
 
 using namespace std;
@@ -10,12 +11,12 @@ bool FloraIdentApp::loadDataset(const string& dir_name)
 
     string folder_name = dir_name.substr(dir_name.rfind("/") + 1);
     if (folder_name == "Train" || folder_name == "train") {
-        string updir = dir_name.substr(0, dir_name.rfind("/"));
-        auto files = Directory::GetListFiles(updir);
+        QDir curr_dir(dir_name.c_str());
+        curr_dir.cdUp();
+        auto files = curr_dir.entryList(QDir::Files);
 
         bool has_train_fts = false;
-        if (any_of(files.begin(), files.end(), [](const string& fn) { return fn.find("train_features.xml") != string::npos; }) &&
-            any_of(files.begin(), files.end(), [](const string& fn) { return fn.find("svm_set_0") != string::npos; }))
+        if (files.contains("train_features.xml") && files.contains("svm_set_0"))
         {
             has_train_fts = true;
         }
