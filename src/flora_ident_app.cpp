@@ -22,9 +22,7 @@ bool FloraIdentApp::loadDataset(const string& dir_name)
         {
             has_train_fts = true;
         }
-        flora_ident.loadTrainSet(dir_name, has_train_fts);
-
-        return true;
+        return flora_ident.loadTrainSet(dir_name, has_train_fts);
     }
     return false;
 }
