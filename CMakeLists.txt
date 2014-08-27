@@ -48,19 +48,21 @@ endif()
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-find_package(OpenCV REQUIRED)
+set(DEFAULT_LIB_PATH $ENV{DEV_LIBS})
+
+find_package(OpenCV REQUIRED PATHS ${DEFAULT_LIB_PATH}/OpenCV)
 include_directories(${OpenCV_INCLUDE_DIRS})
 link_directories(${OpenCV_LIB_DIR})
 
-set(MY_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include)
-include_directories(${MY_INCLUDE_DIR})
+set(PROJ_INCLUDE ${PROJECT_SOURCE_DIR}/include)
+include_directories(${PROJ_INCLUDE})
 include_directories(${PROJECT_BINARY_DIR})
 
 configure_file (
-  "${MY_INCLUDE_DIR}/flora_ident_config.h.in"
+  "${PROJ_INCLUDE}/flora_ident_config.h.in"
   "${PROJECT_BINARY_DIR}/flora_ident_config.h"
 )
 
-set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
+set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR})
 
 add_subdirectory(src)

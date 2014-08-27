@@ -13,8 +13,8 @@ set(SRC_LIST
   core/flora_ident.cpp
 )
 set(HEADER_LIST
-  ${MY_INCLUDE_DIR}/mainwindow.h
-  ${MY_INCLUDE_DIR}/my_widgets.h
+  ${PROJ_INCLUDE}/mainwindow.h
+  ${PROJ_INCLUDE}/my_widgets.h
 )
 WRAP_UI_FILE(HEADER_UI mainwindow.ui)
 
