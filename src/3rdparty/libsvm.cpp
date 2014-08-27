@@ -7,7 +7,9 @@
 #include <stdarg.h>
 #include <limits.h>
 #include <locale.h>
-#include "core/svm.h"
+
+#define _DENSE_REP
+#include "libsvm.h"
 
 int libsvm_version = LIBSVM_VERSION;
 typedef float Qfloat;
@@ -2986,7 +2988,6 @@ bool read_model_header(FILE *fp, svm_model* model)
     }
 
     return true;
-
 }
 
 svm_model *svm_load_model(const char *model_file_name)

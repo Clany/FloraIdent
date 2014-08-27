@@ -43,6 +43,7 @@ typedef Matrix<double, 3, 4> Matrix34d;
 
 
 //////////////////////////////////////////////////////////////////////////
+#ifndef _MSC_VER
 template<typename T, int M>
 inline bool CholeskyDecomp(const Matrix_<T, M, M>& A, Matrix_<T, M, M>& K)
 {
@@ -110,6 +111,82 @@ inline void SVDSolve(const Matrix_<T, M, N>& A, Vector<T, N>& x,
         x = svd.solve(b);
     }
 }
+#else
+template<typename T, int M>
+inline bool CholeskyDecomp(const Matrix<T, M, M, 0, M, M>& A,
+                           Matrix<T, M, M, 0, M, M>& K)
+{
+    LLT<Matrix<T, M, M, 0, M, M>> kkt(A);
+    K = kkt.matrixL();
+    return A.isApprox(kkt.reconstructedMatrix());
+}
 
+
+template<typename T, int M, int N>
+inline void QRDecomp(const Matrix<T, M, N, 0, M, N>& A,
+                     Matrix<T, M, M, 0, M, M>& Q,
+                     Matrix<T, N, N, 0, N, N>& R)
+{
+    static_assert(M >= N || M == Dynamic, "QR decomposition need rows >= cols");
+
+    HouseholderQR<Matrix<T, M, N, M, N>> qr(A);
+    Q = qr.householderQ();
+    R = qr.matrixQR().block(0, 0, N, N).template triangularView<Upper>();
+
+    if (R(0, 0) < 0) {
+        Q = -Q;
+        R = -R;
+    }
+}
+
+
+template<typename T, int M, int N>
+inline void RQDecomp(const Matrix<T, M, N, 0, M, N>& A,
+                     Matrix<T, M, M, 0, M, M>& Q,
+                     Matrix<T, N, N, 0, N, N>& R)
+{
+    static_assert(M <= N || N == Dynamic, "RQ decomposition need cols >= rows");
+
+    HouseholderQR<Matrix<T, N, M, 0, N, M>> qr(A.colwise().reverse().transpose());
+    Q = Reverse<Matrix<T, N, N, 0, N, N>, Vertical>(qr.householderQ().transpose());
+    R = Reverse<Matrix<T, M, M, 0, M, M>, BothDirections>(
+        qr.matrixQR().block(0, 0, M, M).template triangularView<Upper>().transpose());
+
+    if (R(0, 0) < 0) {
+        Q = -Q;
+        R = -R;
+    }
+}
+
+
+template<typename T, int M, int N, int P>
+inline void SVDDecomp(const Matrix<T, M, N, 0, M, N>& A,
+                      Matrix<T, P, 1, 0, P, 1>& s,
+                      Matrix<T, M, P, 0, M, P>& U,
+                      Matrix<T, N, P, 0, N, P>& V)
+{
+    static_assert((M < N ? M : N) == P, "singular values size is wrong!");
+
+    JacobiSVD<Matrix<T, M, N, 0, M, N>> svd(A, ComputeFullU | ComputeFullV);
+    s = svd.singularValues();
+    U = svd.matrixU().block(0, 0, M, P);
+    V = svd.matrixV().block(0, 0, N, P);
+}
+
+
+// Solve linear system Ax = b using SVD (if b is not provided, use b = 0)
+template<typename T, int M, int N>
+inline void SVDSolve(const Matrix<T, M, N, 0, M, N>& A,
+                     Matrix<T, N, 1, 0, N, 1>& x,
+                     const Matrix<T, M, 1, 0, M, 1>& b = Matrix<T, M, 1, 0, M, 1>::Zero())
+{
+    JacobiSVD<Matrix<T, M, N, 0, M, N>> svd(A, ComputeFullU | ComputeFullV);
+    if (b.isZero()) {
+        x = svd.matrixV().block(0, N - 1, N, 1);
+    } else {
+        x = svd.solve(b);
+    }
+}
+#endif
 }
 #endif // CLANY_EIGEN_HPP

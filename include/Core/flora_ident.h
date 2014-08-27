@@ -10,6 +10,8 @@ _CLANY_BEGIN
 struct TrainSet
 {
     size_t size() { return data.size(); }
+    bool empty()  { return data.empty(); }
+
     vector<cv::Mat> data;
     vector<int> labels;
 };
@@ -17,7 +19,7 @@ struct TrainSet
 class FloraIdent
 {
 public:
-    void loadTrainSet(const string& dir, bool has_precompute_fts = false);
+    bool loadTrainSet(const string& dir, bool has_precompute_fts = false);
     void setTestImg(const cv::Mat& src);
     void getCandidates(array<cv::Mat, CANDIDATES_SIZE>& candidates);
 
@@ -28,7 +30,7 @@ public:
 
     void clearData();
 
-public:
+private:
     void initDistMat();
     int updateDistMat(const cv::Mat& x1, int y1, const cv::Mat& x2, int y2, double lambda = 1);
     void nearestSPD(const cv::Mat& src, cv::Mat& dst);

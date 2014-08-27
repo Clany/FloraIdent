@@ -18,7 +18,7 @@ const float MAX_FLOAT = numeric_limits<float>::max();
 const double MAX_DOUBLE = numeric_limits<double>::max();
 
 
-void FloraIdent::loadTrainSet(const string& dir, bool has_precompute_fts)
+bool FloraIdent::loadTrainSet(const string& dir, bool has_precompute_fts)
 {
     QDir curr_dir(dir.c_str());
     auto loc_list = curr_dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
@@ -54,6 +54,10 @@ void FloraIdent::loadTrainSet(const string& dir, bool has_precompute_fts)
             }
         }
     }
+
+    if (train_set.empty()) return false;
+
+    return true;
 }
 
 void FloraIdent::setTestImg(const Mat& src)
@@ -167,7 +171,9 @@ void FloraIdent::updateCandidates(const vector<int>& user_resp)
             err_count += updateDistMat(train_fts.row(cand_idx[pair.first]), user_resp[pair.first],
                                        train_fts.row(cand_idx[pair.second]), user_resp[pair.second]);
         }
+#ifndef NDEBUG
         cout << err_count << endl;
+#endif
         if (err_count < min_err_count) {
             min_err_count = err_count;
             iter_count = 0;

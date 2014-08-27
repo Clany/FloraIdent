@@ -19,8 +19,11 @@ public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+    void loadDataset(const QString& dir);
+
 private:
     void showCandidates();
+    void resetCandButton();
 
 private slots:
     void on_loadDatasetButton_clicked();

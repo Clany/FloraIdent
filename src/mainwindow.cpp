@@ -48,25 +48,46 @@ void MainWindow::showCandidates()
     ui.horizontalLayout_9->setAlignment(ui.candidateImageLabel_4, Qt::AlignCenter);
     ui.horizontalLayout_9->setAlignment(ui.candidateImageLabel_5, Qt::AlignCenter);
     ui.horizontalLayout_9->setAlignment(ui.candidateImageLabel_6, Qt::AlignCenter);
+
+    resetCandButton();
 }
+
+
+void MainWindow::resetCandButton()
+{
+    ui.candUnknown_1->setChecked(true);
+    ui.candUnknown_2->setChecked(true);
+    ui.candUnknown_3->setChecked(true);
+    ui.candUnknown_4->setChecked(true);
+    ui.candUnknown_5->setChecked(true);
+    ui.candUnknown_6->setChecked(true);
+}
+
+
+void MainWindow::loadDataset(const QString& dir)
+{
+    if (!dir.isEmpty()) {
+        ui.outputPanel->append("Loading dataset...");
+        ui.outputPanel->repaint();
+        if (flora_app.loadDataset(QDir::cleanPath(dir).toStdString())) {
+            ui.outputPanel->moveCursor(QTextCursor::End);
+            ui.outputPanel->insertPlainText("done.");
+
+            ui.loadImageButton->setDisabled(false);
+        } else {
+            ui.outputPanel->moveCursor(QTextCursor::End);
+            ui.outputPanel->insertPlainText("error, dataset is not correctly loaded!");
+        }
+    }
+}
+
 
 //////////////////////////////////////////////////////////////////////////
 // Callback functions
 void MainWindow::on_loadDatasetButton_clicked()
 {
-    QString fn = QFileDialog::getExistingDirectory(this, tr("Open Dataset"));
-
-    if (!fn.isEmpty()) {
-        ui.outputPanel->append("Loading dataset...");
-        ui.outputPanel->repaint();
-        flora_app.loadDataset(fn.toStdString());
-        ui.outputPanel->moveCursor(QTextCursor::End);
-        ui.outputPanel->insertPlainText("done.");
-
-        ui.loadImageButton->setDisabled(false);
-        return;
-    }
-//    ui.outputPanel->append("No dataset imported");
+    QString dir_name = QFileDialog::getExistingDirectory(this, tr("Open Dataset"));
+    loadDataset(dir_name);
 }
 
 void MainWindow::on_loadImageButton_clicked()
@@ -80,7 +101,6 @@ void MainWindow::on_loadImageButton_clicked()
         ui.queryImageLabel->clearSelection();
         ui.queryImageLabel->setDisabled(false);
         ui.selectButton->setDisabled(false);
-        return;
     }
 //    ui.outputPanel->append("No image selected");
 }
