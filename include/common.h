@@ -15,8 +15,8 @@
 
 
 _CLANY_BEGIN
-const int CANDIDATES_SIZE = 6;
-const uint RAND_SEED = chrono::system_clock::now().time_since_epoch().count();
+constexpr int CANDIDATES_SIZE = 6;
+const     uint RAND_SEED = chrono::system_clock::now().time_since_epoch().count();
 
 class ImgFeature
 {

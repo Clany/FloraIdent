@@ -4,8 +4,8 @@
 #include "common.h"
 
 _CLANY_BEGIN
-const int FOURD_BINS = 8;
-const int FOURW_BINS = 32;
+constexpr int FOURD_BINS = 8;
+constexpr int FOURW_BINS = 32;
 
 class FourierHist : public ImgFeature
 {

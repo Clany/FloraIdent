@@ -50,23 +50,34 @@ endif()
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
+# Set up project include directories
+set(PROJ_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include)
+include_directories(${PROJ_INCLUDE_DIR})
+include_directories(${PROJ_INCLUDE_DIR}/3rdparty)
+include_directories(${PROJECT_BINARY_DIR})
+
 # Find OpenCV and FFTW
 set(DEFAULT_LIB_PATH $ENV{DEV_LIBS})
+list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
+message(STATUS ${CMAKE_MODULE_PATH})
 
 find_package(OpenCV REQUIRED PATHS ${DEFAULT_LIB_PATH}/OpenCV)
 include_directories(${OpenCV_INCLUDE_DIRS})
 
-find_package(FFTW REQUIRED PATHS ${DEFAULT_LIB_PATH}/FFTW)
+find_package(FFTW REQUIRED)
 include_directories(${FFTW_INCLUDES})
 
-# Set up project include directories
-set(PROJ_INCLUDE ${PROJECT_SOURCE_DIR}/include)
-include_directories(${PROJ_INCLUDE})
-include_directories(${PROJ_INCLUDE}/3rdparty)
-include_directories(${PROJECT_BINARY_DIR})
+find_path(
+  Eigen_INCLUDE_DIR
+  NAMES Eigen
+  PATHS ${PROJ_INCLUDE_DIR} ${DEFAULT_LIB_PATH}/Clany
+  PATH_SUFFIXES include
+  NO_DEFAULT_PATH
+)
+include_directories(${Eigen_INCLUDE_DIR})
 
 configure_file (
-  "${PROJ_INCLUDE}/flora_ident_config.h.in"
+  "${PROJ_INCLUDE_DIR}/flora_ident_config.h.in"
   "${PROJECT_BINARY_DIR}/flora_ident_config.h"
 )
 

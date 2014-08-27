@@ -7,10 +7,10 @@
 
 
 _CLANY_BEGIN
-const int RGB_BINS = 6;
-const int H_BINS = 16;
-const int S_BINS = 2;
-const int V_BINS = 4;
+constexpr int RGB_BINS = 6;
+constexpr int H_BINS = 16;
+constexpr int S_BINS = 2;
+constexpr int V_BINS = 4;
 
 class LaplRGB : public ImgFeature
 {

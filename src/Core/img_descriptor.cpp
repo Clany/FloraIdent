@@ -5,7 +5,14 @@ using namespace cv;
 using namespace clany;
 
 
-FeatureExtractor::FeatureExtractor()
+namespace  {
+    constexpr int GIST_WIDTH = 500;
+} // unamed namespace
+
+int FeatureExtractor::w = 0;
+int FeatureExtractor::h = 0;
+
+FeatureExtractor::FeatureExtractor(int width, int height)
 {
 
 // #ifndef NDEBUG
@@ -17,6 +24,7 @@ FeatureExtractor::FeatureExtractor()
 //     feature_extractors.push_back(make_shared<FourierHist>());
 //     feature_extractors.push_back(make_shared<HoughHist>());
 // #endif
+    feature_extractors.push_back(make_shared<Gist>(width, height/*some params to resize the image*/));
     feature_extractors.push_back(make_shared<LaplRGB>());
     feature_extractors.push_back(make_shared<HSVHist>());
     feature_extractors.push_back(make_shared<FourierHist>());

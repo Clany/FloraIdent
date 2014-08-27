@@ -80,3 +80,13 @@ void Gist::extract(const Mat& src, vector<float>& result,
     result.resize(descsize);
     memcpy(result.data(), desc.get(), sizeof(float) * descsize);
 }
+
+void Gist::getFeature(const Mat& src, vector<float>& feature)
+{
+    extract(src, feature, n_blocks, n_scale, n_orients.data());
+}
+
+int Gist::getDim()
+{
+    return 0;
+}
