@@ -7,6 +7,7 @@ set(SRC_LIST
   core/fourier_hist.cpp
   core/hough_hist.cpp
   core/img_descriptor.cpp
+  core/gist.cpp
   core/svm.cpp
   core/knn.cpp
   core/flora_ident.cpp
@@ -15,19 +16,21 @@ set(SRC_LIST
   3rdparty/standalone_image.cpp
 )
 set(HEADER_LIST
-  ${PROJ_INCLUDE}/mainwindow.h
-  ${PROJ_INCLUDE}/my_widgets.h
-  ${PROJ_INCLUDE}/flora_ident_app.h
-  ${PROJ_INCLUDE}/core/color_hist.h
-  ${PROJ_INCLUDE}/core/fourier_hist.h
-  ${PROJ_INCLUDE}/core/hough_hist.h
-  ${PROJ_INCLUDE}/core/img_descriptor.h
-  ${PROJ_INCLUDE}/core/svm.h
-  ${PROJ_INCLUDE}/core/knn.h
-  ${PROJ_INCLUDE}/core/flora_ident.h
-  ${PROJ_INCLUDE}/3rdparty/libsvm.h
-  ${PROJ_INCLUDE}/3rdparty/libgist.h
-  ${PROJ_INCLUDE}/3rdparty/standalone_image.h
+  ${PROJ_INCLUDE_DIR}/mainwindow.h
+  ${PROJ_INCLUDE_DIR}/my_widgets.h
+  ${PROJ_INCLUDE_DIR}/flora_ident_app.h
+  ${PROJ_INCLUDE_DIR}/common.h
+  ${PROJ_INCLUDE_DIR}/core/color_hist.h
+  ${PROJ_INCLUDE_DIR}/core/fourier_hist.h
+  ${PROJ_INCLUDE_DIR}/core/hough_hist.h
+  ${PROJ_INCLUDE_DIR}/core/img_descriptor.h
+  ${PROJ_INCLUDE_DIR}/core/gist.h
+  ${PROJ_INCLUDE_DIR}/core/svm.h  
+  ${PROJ_INCLUDE_DIR}/core/knn.h
+  ${PROJ_INCLUDE_DIR}/core/flora_ident.h
+  ${PROJ_INCLUDE_DIR}/3rdparty/libsvm.h
+  ${PROJ_INCLUDE_DIR}/3rdparty/libgist.h
+  ${PROJ_INCLUDE_DIR}/3rdparty/standalone_image.h
 )
 WRAP_UI_FILE(HEADER_UI mainwindow.ui)
 

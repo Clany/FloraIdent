@@ -4,8 +4,8 @@
 #include "common.h"
 
 _CLANY_BEGIN
-const int R_BINS = 7;   // Distance bins
-const int A_BINS = 8;   // Angle bins
+constexpr int R_BINS = 7;   // Distance bins
+constexpr int A_BINS = 8;   // Angle bins
 
 class HoughHist : public ImgFeature
 {

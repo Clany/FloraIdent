@@ -78,6 +78,8 @@ void FloraIdent::genTrainFeatures()
 {
     if (svm_set.empty()) {
         vector<Mat> train_ft_vec;
+        FeatureExtractor::setSize(train_set.data.begin()->cols,
+                                  train_set.data.begin()->rows);
         FeatureExtractor::extract(train_set.data, train_ft_vec);
 
         size_t train_sz = train_set.size();
