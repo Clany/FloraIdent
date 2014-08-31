@@ -12,10 +12,14 @@ using namespace cv;
 using namespace clany;
 using namespace Eigen;
 
-const float EPSF = numeric_limits<float>::epsilon();
-const double EPSD = numeric_limits<double>::epsilon();
-const float MAX_FLOAT = numeric_limits<float>::max();
-const double MAX_DOUBLE = numeric_limits<double>::max();
+namespace  {
+    constexpr float EPSF = numeric_limits<float>::epsilon();
+    constexpr double EPSD = numeric_limits<double>::epsilon();
+    constexpr float MAX_FLOAT = numeric_limits<float>::max();
+    constexpr double MAX_DOUBLE = numeric_limits<double>::max();
+    constexpr int MAX_ITER = 5;
+} // unamed namespace
+
 
 
 bool FloraIdent::loadTrainSet(const string& dir, bool has_precompute_fts)
@@ -78,9 +82,8 @@ void FloraIdent::genTrainFeatures()
 {
     if (svm_set.empty()) {
         vector<Mat> train_ft_vec;
-        FeatureExtractor::setSize(train_set.data.begin()->cols,
-                                  train_set.data.begin()->rows);
-        FeatureExtractor::extract(train_set.data, train_ft_vec);
+        FeatureExtractor ft_extor;
+        ft_extor.extract(train_set.data, train_ft_vec);
 
         size_t train_sz = train_set.size();
         size_t cat_sz = cat_set.size();
@@ -121,7 +124,8 @@ void FloraIdent::genTrainFeatures()
 void FloraIdent::genTestFeatures()
 {
     vector<Mat> test_ft_vec;
-    FeatureExtractor::extract({test_img}, test_ft_vec);
+    FeatureExtractor ft_extor;
+    ft_extor.extract({test_img}, test_ft_vec);
 
     size_t cat_sz = cat_set.size();
     test_ft.create(1, cat_sz*test_ft_vec.size(), CV_64FC1);
@@ -152,8 +156,7 @@ void FloraIdent::updateCandidates(const vector<int>& user_resp)
         }
     }
 
-    // Random shuffle all the pairs and update distance matrix
-    // until converge, i.e., 3 full passes are made without improvements
+    // Random shuffle all the pairs and update distance matrix until converge
     int min_err_count = numeric_limits<int>::max();
     int iter_count = 0;
     vector<int> cands(CANDIDATES_SIZE);
@@ -236,7 +239,7 @@ void FloraIdent::initDistMat()
     }
 
     // Random shuffle all the pairs and update distance matrix
-    // until converge, i.e., 3 full passes are made without improvements
+    // until converge, i.e., 5 full passes are made without improvements
     int min_err_count = numeric_limits<int>::max();
     int iter_count = 0;
     while (true) {
@@ -255,7 +258,7 @@ void FloraIdent::initDistMat()
             A = dist_mat.clone();
         }
         ++iter_count;
-        if (iter_count > 3) {
+        if (iter_count > MAX_ITER) {
             break;
         }
     }

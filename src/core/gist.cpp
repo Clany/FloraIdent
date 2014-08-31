@@ -81,12 +81,37 @@ void Gist::extract(const Mat& src, vector<float>& result,
     memcpy(result.data(), desc.get(), sizeof(float) * descsize);
 }
 
-void Gist::getFeature(const Mat& src, vector<float>& feature)
+void Gist::getFeature(const Mat& _src, vector<float>& feature)
 {
-    extract(src, feature, n_blocks, n_scale, n_orients.data());
+    Mat src;
+    cvtColor(_src, src, CV_BGR2GRAY);
+//     _src.convertTo(src, CV_32F);
+//     vector<Mat> bgr;
+//     split(src, bgr);
+//     src = (bgr[0] + bgr[1] + bgr[2]) / 3.f;
+    Mat cropped(src);
+
+    double h_ratio = static_cast<double>(h) / src.rows;
+    double w_ratio = static_cast<double>(w) / src.cols;
+    if (h_ratio < w_ratio) {
+        // Resize to same width
+        resize(src, src, Size(), w_ratio, w_ratio, INTER_LANCZOS4);
+        // Crop to get the same size
+        cropped = src(Rect(0, (src.rows - h) / 2, w, h));
+    }
+    if (w_ratio < h_ratio) {
+        // Resize to same height
+        resize(src, src, Size(), h_ratio, h_ratio, INTER_LANCZOS4);
+        // Crop to get the same size
+        cropped = src(Rect((src.cols - w) / 2, 0, w, h));
+    }
+
+    // Extract GIST feature
+    extract(cropped, feature, n_blocks, n_scale, n_orients.data());
 }
 
+// Return dimension of gray image by default
 int Gist::getDim()
 {
-    return 0;
+    return dim;
 }

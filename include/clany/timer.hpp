@@ -6,6 +6,7 @@
 #  define CLOCK()  clock()
 #  define TICK_FACTOR  CLOCKS_PER_SEC
 #else
+#  include <unistd.h>
 #  include <sys/times.h>
 #  define CLOCK()  ::times(NULL)
 #  define TICK_FACTOR  TICK_PER_SECOND

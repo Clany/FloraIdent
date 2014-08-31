@@ -16,9 +16,7 @@ bool FloraIdentApp::loadDataset(const string& dir_name)
         auto files = curr_dir.entryList(QDir::Files);
 
         bool has_train_fts = false;
-        if (files.contains("train_features.xml") &&
-            files.contains("svm_set_0") && files.contains("svm_set_1") &&
-            files.contains("svm_set_2") && files.contains("svm_set_3"))
+        if (files.contains("train_features.xml") && files.contains("svm_set_0"))
         {
             has_train_fts = true;
         }

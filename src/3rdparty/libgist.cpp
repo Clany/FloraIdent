@@ -29,7 +29,9 @@ static void fftw_unlock(void)
 }
 
 /*--------------------------------------------------------------------------*/
-
+#ifdef M_PI
+#undef M_PI
+#endif
 const double M_PI = 3.14159265358979323846;
 
 static image_t *image_add_padding(image_t *src, int padding)

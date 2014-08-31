@@ -11,30 +11,28 @@
 _CLANY_BEGIN
 class FeatureExtractor {
 public:
-    static void extract(const cv::Mat& sample, vector<vector<float>>& features);
+    FeatureExtractor();
 
-    static void extract(const vector<cv::Mat>& samples, vector<cv::Mat>& ft_vec);
+    void extract(const cv::Mat& sample, vector<vector<float>>& features);
 
-    static void mergeFeature(const vector<vector<vector<float>>>& features_src,
+    void extract(const vector<cv::Mat>& samples, vector<cv::Mat>& ft_vec);
+
+    void mergeFeature(const vector<vector<vector<float>>>& features_src,
                              vector<vector<float>>& features_dst);
-                             
-    static setSize(int width, int height) {
+
+    void setSize(int width, int height) {
         w = width;
         h = height;
     }
 
 private:
-    FeatureExtractor(int width, int height);
+    const int GIST_WIDTH  = 256;
+    const int GIST_HEIGHT = 256;
 
-    static FeatureExtractor& instance() {
-        static FeatureExtractor img_ft(w, h);
-        return img_ft;
-    }
+    int w = GIST_WIDTH;
+    int h = GIST_HEIGHT;
 
     vector<ImgFeature::Ptr> feature_extractors;
-
-    static int w;
-    static int h;
 };
 
 _CLANY_END

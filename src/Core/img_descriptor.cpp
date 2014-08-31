@@ -5,26 +5,19 @@ using namespace cv;
 using namespace clany;
 
 
-namespace  {
-    constexpr int GIST_WIDTH = 500;
-} // unamed namespace
-
-int FeatureExtractor::w = 0;
-int FeatureExtractor::h = 0;
-
-FeatureExtractor::FeatureExtractor(int width, int height)
+FeatureExtractor::FeatureExtractor()
 {
-
 // #ifndef NDEBUG
-//     feature_extractors.push_back(make_shared<HSVHist>());
+//     feature_extractors.push_back(make_shared<Gist>(w, h));
 // #else
-//     /*feature_extractors.push_back(make_shared<ProbRGB>());*/
+//     feature_extractors.push_back(make_shared<Gist>(w, h));
 //     feature_extractors.push_back(make_shared<LaplRGB>());
 //     feature_extractors.push_back(make_shared<HSVHist>());
 //     feature_extractors.push_back(make_shared<FourierHist>());
 //     feature_extractors.push_back(make_shared<HoughHist>());
+//     /*feature_extractors.push_back(make_shared<ProbRGB>());*/
 // #endif
-    feature_extractors.push_back(make_shared<Gist>(width, height/*some params to resize the image*/));
+    feature_extractors.push_back(make_shared<Gist>(w, h));
     feature_extractors.push_back(make_shared<LaplRGB>());
     feature_extractors.push_back(make_shared<HSVHist>());
     feature_extractors.push_back(make_shared<FourierHist>());
@@ -36,9 +29,8 @@ void FeatureExtractor::extract(const Mat& src, vector<vector<float>>& features)
 {
     vector<float> ft;
 
-    const auto& extractors = instance().feature_extractors;
-    for (const auto& extractor : extractors) {
-        extractor->extract(src, ft);
+    for (const auto& ex : feature_extractors) {
+        ex->extract(src, ft);
         features.push_back(move(ft));
     }
 }
@@ -46,9 +38,8 @@ void FeatureExtractor::extract(const Mat& src, vector<vector<float>>& features)
 
 void FeatureExtractor::extract(const vector<Mat>& samples, vector<Mat>& ft_vec)
 {
-    const auto& extractors = instance().feature_extractors;
     int ft_id = 0;
-    for (const auto& ex : extractors) {
+    for (const auto& ex : feature_extractors) {
         cout << "Extracting feature " << ++ft_id << endl;
 
         int ft_dim = ex->size();

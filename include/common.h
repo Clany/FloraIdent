@@ -13,6 +13,10 @@
 #include "flora_ident_config.h"
 #include "clany/traits.hpp"
 
+#ifdef _MSC_VER
+#  define constexpr const
+#endif
+
 
 _CLANY_BEGIN
 constexpr int CANDIDATES_SIZE = 6;
