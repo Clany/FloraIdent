@@ -2,6 +2,7 @@
 #include <QHBoxLayout>
 #include <QSizeGrip>
 #include <QGroupBox>
+#include <iostream>
 #include "my_widgets.h"
 
 //////////////////////////////////////////////////////////////////////////
@@ -31,8 +32,17 @@ void SelectionArea::mousePressEvent(QMouseEvent *ev)
 void SelectionArea::mouseMoveEvent(QMouseEvent *ev)
 {
     if (ev->buttons() & Qt::LeftButton) {
-        QPoint delta = ev->pos() - origin;
-        move(pos() + delta);
+        // dst is the new top left corner of the selection area
+        QPoint dst = pos() + (ev->pos() - origin);
+        QSize lr_bound = ((ImageLabel*)parent())->size() - size();
+
+        // Prevent to move out of canvas
+        if (dst.x() < 0) dst.setX(0);
+        if (dst.y() < 0) dst.setY(0);
+        if (dst.x() > lr_bound.width()) dst.setX(lr_bound.width());
+        if (dst.y() > lr_bound.height()) dst.setY(lr_bound.height());
+
+        move(dst);
     }
 }
 
