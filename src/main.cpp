@@ -8,6 +8,7 @@
 
 using namespace std;
 using namespace cv;
+using namespace clany;
 
 int main(int argc, char *argv[])
 {

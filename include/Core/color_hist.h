@@ -1,9 +1,8 @@
 #ifndef COLOR_HIST_H
 #define COLOR_HIST_H
 
-#include <array>
 #include "common.h"
-#include "clany/clany_macros.h"
+#include "img_feature.h"
 
 
 _CLANY_BEGIN

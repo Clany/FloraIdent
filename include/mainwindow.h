@@ -8,7 +8,6 @@
   #include <QtGui/QWidget>
 #endif
 #include "ui_mainwindow.h"
-#include "my_widgets.h"
 #include "flora_ident_app.h"
 
 class MainWindow : public QWidget
@@ -17,15 +16,23 @@ class MainWindow : public QWidget
 
 public:
     MainWindow(QWidget *parent = 0);
-    ~MainWindow();
+    ~MainWindow() = default;
 
     void loadDataset(const QString& dir);
 
 private:
     void showCandidates();
     void resetCandButton();
+    void restoreLastSelection();
+    void getUserResponses(std::array<int, clany::CANDIDATES_SIZE>& resp);
 
 private slots:
+    void on_learningRateSlider_sliderMoved(int value);
+
+    void on_lastSelectionButton_clicked();
+
+    void on_settingsButton_clicked();
+
     void on_loadDatasetButton_clicked();
 
     void on_loadImageButton_clicked();
@@ -43,6 +50,7 @@ private:
 
     clany::FloraIdentApp flora_app;
     std::array<QImage, clany::CANDIDATES_SIZE> candidates;
+    std::array<int, clany::CANDIDATES_SIZE> last_selection;
 };
 
 #endif // MAINWINDOW_H

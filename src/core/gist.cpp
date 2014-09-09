@@ -1,117 +1,100 @@
-#include <iostream>
+#include <numeric>
 #include <memory>
-#include <opencv2/opencv.hpp>
 #include "core/gist.h"
-#include "clany/timer.hpp"
 
 using namespace std;
 using namespace cv;
 using namespace clany;
 
 namespace {
-class GistImage {
+using DescPtr     = unique_ptr<float, void(*)(void*)>;
+using ColorImgPtr = unique_ptr<color_image_t, void(*)(color_image_t*)>;
+using GrayImgPtr  = unique_ptr<image_t, void(*)(image_t*)>;
+
+class GISTImage {
 public:
-    GistImage(const cv::Mat& src) {
-        cv::Mat src_f;
-        src.convertTo(src_f, CV_32F);
-
-        if (src.channels() == 3) {
+    GISTImage(const cv::Mat& src) {
+        if (src.channels() == 1) {
+            gray_img.reset(image_new(src.cols, src.rows));
+            memcpy(gray_img->data, src.data, src.cols * src.rows * sizeof(float));
+        } else {
             vector<cv::Mat> bgr;
-            cv::split(src_f, bgr);
+            cv::split(src, bgr);
 
-            color_img = color_image_new(src.cols, src.rows);
+            color_img.reset(color_image_new(src.cols, src.rows));
             memcpy(color_img->c1, bgr[2].data, src.cols * src.rows * sizeof(float));
             memcpy(color_img->c2, bgr[1].data, src.cols * src.rows * sizeof(float));
             memcpy(color_img->c3, bgr[0].data, src.cols * src.rows * sizeof(float));
         }
-
-        if (src.channels() == 1) {
-            gray_img = image_new(src.cols, src.rows);
-            memcpy(gray_img->data, src_f.data, src.cols * src.rows * sizeof(float));
-        }
-    }
-
-    ~GistImage() {
-        if (color_img) color_image_delete(color_img);
-        if (gray_img) image_delete(gray_img);
     }
 
     operator color_image_t* () {
-        return color_img;
+        return color_img.get();
     }
 
     operator image_t* () {
-        return gray_img;
+        return gray_img.get();
     }
 
 private:
-    color_image_t *color_img = nullptr;
-    image_t* gray_img = nullptr;
+    ColorImgPtr color_img {nullptr, &color_image_delete};
+    GrayImgPtr  gray_img {nullptr, &image_delete};
 };
+} // Unnamed namespace
 
-using GistDesc = unique_ptr<float, void(*)(void*)>;
-}   // Unamed namespace
 
-void Gist::extract(const Mat& src, vector<float>& result,
-                   int nblocks, int n_scale, const int* n_orientations)
-{
-    assert(!src.empty());
-    assert(src.channels() == 3 || src.channels() == 1);
+//////////////////////////////////////////////////////////////////////////
+GISTParams GIST::params = DEFAULT_GIST_PARAMS;
 
-    GistImage img(src);
+void GIST::setParams(const GISTParams& gist_params) {
+    params = gist_params;
 
-    // Compute gist descriptor
-    GistDesc desc(nullptr, &free);
-
-    if (src.channels() == 3) {
-        desc.reset(color_gist_scaletab(img, nblocks, n_scale, n_orientations));
-    } else {
-        desc.reset(bw_gist_scaletab(img, nblocks, n_scale, n_orientations));
-    }
-
-    // Compute descriptor size
-    int descsize = 0;
-    for (int i = 0; i < n_scale; i++) {
-        descsize += nblocks * nblocks * n_orientations[i];
-    }
-    descsize *= src.channels();
-
-    // Copy to result
-    result.resize(descsize);
-    memcpy(result.data(), desc.get(), sizeof(float) * descsize);
+    params.size = accumulate(params.orients.begin(), params.orients.end(), 0,
+                             [&gist_params](int init, int orient) {
+        return init + gist_params.blocks * gist_params.blocks * orient;
+    });
+    params.size *= params.use_color ? 3 : 1;
 }
 
-void Gist::getFeature(const Mat& _src, vector<float>& feature)
+void GIST::getFeature(const Mat& _src, vector<float>& result)
 {
-    Mat src;
-    cvtColor(_src, src, CV_BGR2GRAY);
-//     _src.convertTo(src, CV_32F);
-//     vector<Mat> bgr;
-//     split(src, bgr);
-//     src = (bgr[0] + bgr[1] + bgr[2]) / 3.f;
-    Mat cropped(src);
+    assert(!_src.empty());
+    cv::Mat src(_src.clone());
 
-    double h_ratio = static_cast<double>(h) / src.rows;
-    double w_ratio = static_cast<double>(w) / src.cols;
+    double h = params.height;
+    double w = params.width;
+    double h_ratio = h / src.rows;
+    double w_ratio = w / src.cols;
+
+    Mat cropped(src);
     if (h_ratio < w_ratio) {
         // Resize to same width
         resize(src, src, Size(), w_ratio, w_ratio, INTER_LANCZOS4);
-        // Crop to get the same size
+        // Crop to get same size
         cropped = src(Rect(0, (src.rows - h) / 2, w, h));
     }
     if (w_ratio < h_ratio) {
         // Resize to same height
         resize(src, src, Size(), h_ratio, h_ratio, INTER_LANCZOS4);
-        // Crop to get the same size
+        // Crop to get same size
         cropped = src(Rect((src.cols - w) / 2, 0, w, h));
     }
 
-    // Extract GIST feature
-    extract(cropped, feature, n_blocks, n_scale, n_orients.data());
-}
+    // Compute gist descriptor
+    cropped.convertTo(cropped, CV_32F);
+    DescPtr desc(nullptr, &free);
 
-// Return dimension of gray image by default
-int Gist::getDim()
-{
-    return dim;
+    if (params.use_color) {
+        assert(cropped.channels() == 3);
+        desc.reset(color_gist_scaletab(GISTImage(cropped),
+                   params.blocks, params.scale, params.orients.data()));
+    } else {
+        cvtColor(cropped, cropped, CV_BGR2GRAY);
+        desc.reset(bw_gist_scaletab(GISTImage(cropped),
+                   params.blocks, params.scale, params.orients.data()));
+    }
+
+    // Copy to result
+    result.resize(params.size);
+    memcpy(result.data(), desc.get(), sizeof(float) * params.size);
 }

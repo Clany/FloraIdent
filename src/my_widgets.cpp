@@ -5,6 +5,9 @@
 #include <iostream>
 #include "my_widgets.h"
 
+using namespace std;
+using namespace clany;
+
 //////////////////////////////////////////////////////////////////////////
 // Selection area
 SelectionArea::SelectionArea(QWidget *parent) : QWidget(parent)
@@ -94,10 +97,22 @@ void ImageLabel::setImage(const QImage& image)
     setPixmap(QPixmap::fromImage(img));
 }
 
-bool ImageLabel::getSelectionArea(QRect& area)
+bool ImageLabel::getSelectionArea(QRect& area, std::string& area_string, bool is_scaled)
 {
     if (selection_area && selection_area->width()) {
         area = QRect(selection_area->pos(), selection_area->size());
+        area_string = string("Selected image region: [x: ") +
+                      to_string(area.left()) + ", y: " +
+                      to_string(area.top()) + ", w: " +
+                      to_string(area.width()) + ", h: " +
+                      to_string(area.height()) + "]";
+        if (is_scaled) {
+            double scale = 1 / ratio;
+            area.setRect(area.left()   * scale,
+                         area.top()    * scale,
+                         area.width()  * scale,
+                         area.height() * scale);
+        }
         return true;
     }
 

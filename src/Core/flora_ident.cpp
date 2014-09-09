@@ -18,9 +18,24 @@ namespace  {
     constexpr float MAX_FLOAT = numeric_limits<float>::max();
     constexpr double MAX_DOUBLE = numeric_limits<double>::max();
     constexpr int MAX_ITER = 5;
-} // unamed namespace
+} // Unnamed namespace
 
 
+void FloraIdent::changeSettings(const array<bool, FEATURES_NUM>& features,
+                                const GISTParams& gist_params)
+{
+    using FeatureFlag = FeatureExtractor::FeatureFlag;
+
+    int ft_flag = 0;
+    if (features[0]) ft_flag |= FeatureFlag::GIST_DESC;
+    if (features[1]) ft_flag |= FeatureFlag::LAPL_RGB;
+    if (features[2]) ft_flag |= FeatureFlag::HSV_HIST;
+    if (features[3]) ft_flag |= FeatureFlag::FOURIER_HIST;
+    if (features[4]) ft_flag |= FeatureFlag::HOUGH_HIST;
+
+    ft_extor.setFeatures(static_cast<FeatureFlag>(ft_flag));
+    ft_extor.setGISTParams(gist_params);
+}
 
 bool FloraIdent::loadTrainSet(const string& dir, bool has_precompute_fts)
 {
@@ -82,7 +97,6 @@ void FloraIdent::genTrainFeatures()
 {
     if (svm_set.empty()) {
         vector<Mat> train_ft_vec;
-        FeatureExtractor ft_extor;
         ft_extor.extract(train_set.data, train_ft_vec);
 
         size_t train_sz = train_set.size();
@@ -124,7 +138,6 @@ void FloraIdent::genTrainFeatures()
 void FloraIdent::genTestFeatures()
 {
     vector<Mat> test_ft_vec;
-    FeatureExtractor ft_extor;
     ft_extor.extract({test_img}, test_ft_vec);
 
     size_t cat_sz = cat_set.size();
@@ -143,7 +156,7 @@ void FloraIdent::genTestFeatures()
 }
 
 
-void FloraIdent::updateCandidates(const vector<int>& user_resp)
+void FloraIdent::updateCandidates(const UserResponse& user_resp, int lambda)
 {
     Mat A = dist_mat.clone();
 
@@ -163,14 +176,16 @@ void FloraIdent::updateCandidates(const vector<int>& user_resp)
     iota(cands.begin(), cands.end(), 0);
     while (true) {
         int err_count = 0;
+        // Update according to test-cand pairs
         shuffle(cands.begin(), cands.end(), default_random_engine(RAND_SEED));
         for (int i = 0; i < CANDIDATES_SIZE; ++i) {
             int idx = cands[i];
             if (user_resp[idx]) {
-                err_count += updateDistMat(test_ft, 1, train_fts.row(cand_idx[idx]), user_resp[idx], 50);
+                err_count += updateDistMat(test_ft, 1, train_fts.row(cand_idx[idx]), user_resp[idx], lambda);
             }
         }
 
+        // Update based on cand-cand pairs
         shuffle(pairs.begin(), pairs.end(), default_random_engine(RAND_SEED));
         for (const auto& pair : pairs) {
             err_count += updateDistMat(train_fts.row(cand_idx[pair.first]), user_resp[pair.first],

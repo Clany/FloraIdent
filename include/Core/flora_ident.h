@@ -19,13 +19,16 @@ struct TrainSet
 class FloraIdent
 {
 public:
+    void changeSettings(const array<bool, FEATURES_NUM>& features,
+                        const GISTParams& gist_params);
+
     bool loadTrainSet(const string& dir, bool has_precompute_fts = false);
     void setTestImg(const cv::Mat& src);
     void getCandidates(array<cv::Mat, CANDIDATES_SIZE>& candidates);
 
     void genTrainFeatures();
     void genTestFeatures();
-    void updateCandidates(const vector<int>& user_resp);
+    void updateCandidates(const UserResponse& user_resp, int lambda);
     string predict();
 
     void clearData();
@@ -44,6 +47,8 @@ private:
 
     vector<string> cat_set;
     TrainSet train_set;
+
+    FeatureExtractor ft_extor;
 
     cv::Mat train_fts;
     vector<int> cand_idx;

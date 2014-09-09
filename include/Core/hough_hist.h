@@ -2,6 +2,7 @@
 #define HOUGH_HIST_H
 
 #include "common.h"
+#include "img_feature.h"
 
 _CLANY_BEGIN
 constexpr int R_BINS = 7;   // Distance bins

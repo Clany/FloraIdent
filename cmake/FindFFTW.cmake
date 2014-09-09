@@ -32,15 +32,18 @@ endif()
 #Check whether to search static or dynamic libs
 set(CMAKE_FIND_LIBRARY_SUFFIXES_SAV ${CMAKE_FIND_LIBRARY_SUFFIXES})
 
-if(${FFTW_USE_STATIC_LIBS})
-  set(CMAKE_FIND_LIBRARY_SUFFIXES ${CMAKE_STATIC_LIBRARY_SUFFIX})
+#Check platform
+if(MSVC)
+  set(CMAKE_FIND_LIBRARY_SUFFIXES -3.lib)
+  set(CMAKE_FIND_LIBRARY_PREFIXES lib)
+elseif(MINGW)
+  set(CMAKE_FIND_LIBRARY_SUFFIXES -3.dll)
 else()
-  set(CMAKE_FIND_LIBRARY_SUFFIXES ${CMAKE_SHARED_LIBRARY_SUFFIX})
-endif()
-
-#Check if using windows
-if(WIN32)
-  set(LIB_SUFFIX -3)
+  if(${FFTW_USE_STATIC_LIBS})
+    set(CMAKE_FIND_LIBRARY_SUFFIXES ${CMAKE_STATIC_LIBRARY_SUFFIX})
+  else()
+    set(CMAKE_FIND_LIBRARY_SUFFIXES ${CMAKE_SHARED_LIBRARY_SUFFIX})
+  endif()
 endif()
 
 if(FFTW_DIR)
@@ -48,7 +51,7 @@ if(FFTW_DIR)
   #find libs
   find_library(
     FFTW_LIB
-    NAMES fftw3${LIB_SUFFIX}
+    NAMES fftw3
     PATHS ${FFTW_DIR}
     PATH_SUFFIXES lib lib64
     NO_DEFAULT_PATH
@@ -56,7 +59,7 @@ if(FFTW_DIR)
 
   find_library(
     FFTWF_LIB
-    NAMES fftw3f${LIB_SUFFIX}
+    NAMES fftw3f
     PATHS ${FFTW_DIR}
     PATH_SUFFIXES lib lib64
     NO_DEFAULT_PATH
@@ -64,7 +67,7 @@ if(FFTW_DIR)
 
   find_library(
     FFTWL_LIB
-    NAMES fftw3l${LIB_SUFFIX}
+    NAMES fftw3l
     PATHS ${FFTW_DIR}
     PATH_SUFFIXES lib lib64
     NO_DEFAULT_PATH

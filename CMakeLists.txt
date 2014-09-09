@@ -31,8 +31,8 @@ if(USE_QT4)
   find_package(Qt4 COMPONENTS QtCore QtGui REQUIRED)
   include(${QT_USE_FILE})
   set(Qt_LIBS ${QT_LIBRARIES})
-  macro(WRAP_UI_FILE header_ui ui_file)
-    QT4_WRAP_UI(${header_ui} ${ui_file})
+  macro(WRAP_UI_FILE files)
+    QT4_WRAP_UI(${ARGV})
   endmacro()
   set(USE_QT_VER 4)
 else()
@@ -40,8 +40,8 @@ else()
   find_package(Qt5Gui REQUIRED)
   find_package(Qt5Widgets REQUIRED)
   set(Qt_LIBS Qt5::Core Qt5::Gui Qt5::Widgets)
-  macro(WRAP_UI_FILE header_ui ui_file)
-    QT5_WRAP_UI(${header_ui} ${ui_file})
+  macro(WRAP_UI_FILE files)
+    QT5_WRAP_UI(${ARGV})
   endmacro()
   set(USE_QT_VER 5)
 endif()
@@ -57,11 +57,17 @@ include_directories(${PROJ_INCLUDE_DIR}/3rdparty)
 include_directories(${PROJECT_BINARY_DIR})
 
 # Find OpenCV and FFTW
-set(DEFAULT_LIB_PATH $ENV{DEV_LIBS})
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
-message(STATUS ${CMAKE_MODULE_PATH})
 
-find_package(OpenCV REQUIRED PATHS ${DEFAULT_LIB_PATH}/OpenCV)
+option(USE_DEV_LIBS_PATH OFF)
+if(USE_DEV_LIBS_PATH)
+  set(DEFAULT_LIB_PATH $ENV{DEV_LIBS})
+  set(FFTW_DIR ${DEFAULT_LIB_PATH}/FFTW)
+  set(OpenCV_DIR ${DEFAULT_LIB_PATH}/OpenCV)
+  set(Eigen_DIR ${DEFAULT_LIB_PATH}/Clany/include)
+endif()
+
+find_package(OpenCV REQUIRED)
 include_directories(${OpenCV_INCLUDE_DIRS})
 
 find_package(FFTW REQUIRED)
@@ -70,9 +76,7 @@ include_directories(${FFTW_INCLUDES})
 find_path(
   Eigen_INCLUDE_DIR
   NAMES Eigen
-  PATHS ${PROJ_INCLUDE_DIR} ${DEFAULT_LIB_PATH}/Clany
-  PATH_SUFFIXES include
-  NO_DEFAULT_PATH
+  PATHS ${PROJ_INCLUDE_DIR} ${Eigen_DIR}
 )
 include_directories(${Eigen_INCLUDE_DIR})
 

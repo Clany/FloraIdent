@@ -9,21 +9,28 @@
 
 
 _CLANY_BEGIN
+constexpr int CANDIDATES_SIZE = 6;
+constexpr int FEATURES_NUM = 5;
+using UserResponse = array<int, CANDIDATES_SIZE>;
+
 class FeatureExtractor {
 public:
-    FeatureExtractor();
+    enum FeatureFlag { GIST_DESC = 1, LAPL_RGB = 2, HSV_HIST = 4,
+                       FOURIER_HIST = 8, HOUGH_HIST = 16 };
 
-    void extract(const cv::Mat& sample, vector<vector<float>>& features);
+    FeatureExtractor();
 
     void extract(const vector<cv::Mat>& samples, vector<cv::Mat>& ft_vec);
 
+    void setFeatures(const FeatureFlag& flag);
+
+    void setGISTParams(const GISTParams& params);
+
+    // Not used
+    void extract(const cv::Mat& sample, vector<vector<float>>& features);
+
     void mergeFeature(const vector<vector<vector<float>>>& features_src,
                              vector<vector<float>>& features_dst);
-
-    void setSize(int width, int height) {
-        w = width;
-        h = height;
-    }
 
 private:
     const int GIST_WIDTH  = 256;

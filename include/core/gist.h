@@ -1,52 +1,38 @@
 #ifndef GIST_H
 #define GIST_H
 
-#include <array>
-#include <vector>
-#include <opencv2/opencv.hpp>
 #include "common.h"
+#include "img_feature.h"
 #include "libgist.h"
 
 _CLANY_BEGIN
-class Gist : public ImgFeature {
+struct GISTParams {
+    bool        use_color;
+    int         width;
+    int         height;
+    int         blocks;
+    int         scale;
+    vector<int> orients;
+    int         size;
+};
+
+const GISTParams DEFAULT_GIST_PARAMS {false, 256, 256, 4, 4, {8, 8, 8, 8}, 512};
+
+class GIST : public ImgFeature {
 public:
-    Gist(int width, int height) : w(width), h(height) {
-#ifdef _MSC_VER
-        n_orients.assign({8, 8, 8, 8});
-#endif
-        for (int i = 0; i < n_scale; i++) {
-            dim += n_blocks * n_blocks * n_orients[i];
-        }
-    }
-    Gist(const cv::Mat& src) : img(src), w(src.cols), h(src.rows) {}
+    GIST() = default;
 
-    void extract(vector<float>& result, int n_blocks, int n_scale, vector<int> n_orientations) const {
-        extract(img, result, n_blocks, n_scale, n_orientations.data());
+    GIST(const GISTParams& gist_params) {
+        setParams(gist_params);
     }
 
-    void extract(vector<float>& result, int n_blocks, int n_scale,
-                 const int* n_orientations) const {
-        extract(img, result, n_blocks, n_scale, n_orientations);
-    }
-
-    static
-    void extract(const cv::Mat& src, vector<float>& result,
-                 int n_blocks, int n_scale, const int* n_orientations);
+    static void setParams(const GISTParams& gist_params);
 
 private:
-    void getFeature(const cv::Mat& src, vector<float>& feature) override;
-    int getDim() override;
+    void getFeature(const cv::Mat& src, vector<float>& result) override;
+    int  getDim() override { return params.size; };
 
-    cv::Mat img;
-    int w = 256, h = 256;
-    int n_blocks = 4;
-    int n_scale = 4;
-#ifdef _MSC_VER
-    vector<int> n_orients;
-#else
-    vector<int> n_orients = {8, 8, 8, 8};
-#endif
-    int dim = 0;
+    static GISTParams params;
 };
 _CLANY_END
 

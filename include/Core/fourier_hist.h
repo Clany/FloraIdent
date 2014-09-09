@@ -2,6 +2,7 @@
 #define FOURIER_HIST_H
 
 #include "common.h"
+#include "img_feature.h"
 
 _CLANY_BEGIN
 constexpr int FOURD_BINS = 8;

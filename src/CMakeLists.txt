@@ -1,6 +1,7 @@
 set(SRC_LIST
   main.cpp
   mainwindow.cpp
+  settings_dialog.cpp
   my_widgets.cpp
   flora_ident_app.cpp
   core/color_hist.cpp
@@ -15,11 +16,14 @@ set(SRC_LIST
   3rdparty/libgist.cpp
   3rdparty/standalone_image.cpp
 )
+
 set(HEADER_LIST
   ${PROJ_INCLUDE_DIR}/mainwindow.h
+  ${PROJ_INCLUDE_DIR}/settings_dialog.h
   ${PROJ_INCLUDE_DIR}/my_widgets.h
   ${PROJ_INCLUDE_DIR}/flora_ident_app.h
   ${PROJ_INCLUDE_DIR}/common.h
+  ${PROJ_INCLUDE_DIR}/core/img_feature.h
   ${PROJ_INCLUDE_DIR}/core/color_hist.h
   ${PROJ_INCLUDE_DIR}/core/fourier_hist.h
   ${PROJ_INCLUDE_DIR}/core/hough_hist.h
@@ -32,7 +36,11 @@ set(HEADER_LIST
   ${PROJ_INCLUDE_DIR}/3rdparty/libgist.h
   ${PROJ_INCLUDE_DIR}/3rdparty/standalone_image.h
 )
-WRAP_UI_FILE(HEADER_UI mainwindow.ui)
+
+WRAP_UI_FILE(HEADER_UI
+  mainwindow.ui
+  settings_dialog.ui
+)
 
 add_executable(FloraIdent WIN32 ${SRC_LIST} ${HEADER_LIST} ${HEADER_UI})
 target_link_libraries(FloraIdent ${Qt_LIBS} ${OpenCV_LIBS} ${FFTWF_LIB})

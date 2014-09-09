@@ -5,6 +5,18 @@ using namespace std;
 using namespace cv;
 using namespace clany;
 
+
+void FloraIdentApp::setSettings(const FloraIdentSettings& settings)
+{
+    this->settings = settings;
+    flora_ident.changeSettings(settings.used_features, settings.gist_params);
+}
+
+void FloraIdentApp::setLearningRate(int learning_rate)
+{
+    settings.learning_rate = learning_rate;
+}
+
 bool FloraIdentApp::loadDataset(const string& dir_name)
 {
     flora_ident.clearData();
@@ -35,6 +47,11 @@ void FloraIdentApp::setSelectionRegion(int x, int y, int width, int height)
     flora_ident.setTestImg(query_img(Rect(x, y, width, height)));
 }
 
+void clany::FloraIdentApp::setSelectionRegion(const QRect& rect)
+{
+    setSelectionRegion(rect.left(), rect.top(), rect.width(), rect.height());
+}
+
 void FloraIdentApp::extractFeatures()
 {
     flora_ident.genTrainFeatures();
@@ -43,9 +60,9 @@ void FloraIdentApp::extractFeatures()
     flora_ident.getCandidates(candidates);
 }
 
-void FloraIdentApp::updateCandidates(const vector<int>& user_resp)
+void FloraIdentApp::updateCandidates(const UserResponse& user_resp)
 {
-    flora_ident.updateCandidates(user_resp);
+    flora_ident.updateCandidates(user_resp, settings.learning_rate);
     flora_ident.getCandidates(candidates);
 }
 
