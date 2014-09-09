@@ -132,7 +132,8 @@ void MainWindow::getUserResponses(UserResponse& user_resp)
 void MainWindow::on_learningRateSlider_sliderMoved(int value)
 {
     flora_app.setLearningRate(value);
-    ui.learningRateLabel->setText(to_string(value).c_str());
+    auto new_rate = string("Learning rate: ") + to_string(value);
+    ui.learningRateLabel->setText(new_rate.c_str());
 }
 
 void MainWindow::on_lastSelectionButton_clicked()

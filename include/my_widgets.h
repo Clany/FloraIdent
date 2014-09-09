@@ -36,7 +36,7 @@ public:
     explicit ImageLabel(QWidget* parent = 0) : QLabel(parent) {};
 
     void setImage(const QImage& image);
-    bool getSelectionArea(QRect& area, std::string& area_string = std::string(), bool is_scaled = false);
+    bool getSelectionArea(QRect& area, std::string& area_string, bool is_scaled = false);
 
     void clearSelection() { selection_area.reset(nullptr); }
     float getRatio() { return ratio; };
