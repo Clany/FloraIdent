@@ -1,7 +1,6 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include "common.h"
 #if USE_QT_VER >= 5
   #include <QtWidgets/QWidget>
 #else

@@ -1,14 +1,13 @@
 #ifndef SETTINGS_DIALOG_H
 #define SETTINGS_DIALOG_H
 
-#include "common.h"
 #if USE_QT_VER >= 5
 #include <QtWidgets/QWidget>
 #else
 #include <QtGui/QWidget>
 #endif
-
 #include "ui_settings_dialog.h"
+#include "common.h"
 
 _CLANY_BEGIN
 struct FloraIdentSettings;

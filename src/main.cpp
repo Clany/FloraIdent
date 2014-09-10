@@ -1,9 +1,9 @@
-#include "common.h"
 #if USE_QT_VER >= 5
  #include <QtWidgets/QApplication>
 #else
  #include <QtGui/QApplication>
 #endif
+#include "common.h"
 #include "mainwindow.h"
 
 using namespace std;

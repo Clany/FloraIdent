@@ -1,11 +1,11 @@
 #ifndef MY_WIDGETS_H
 #define MY_WIDGETS_H
 
-#include "common.h"
 #include <memory>
 #include <QRubberBand>
 #include <QLabel>
 #include <QMouseEvent>
+#include "common.h"
 
 class SelectionArea : public QWidget
 {
