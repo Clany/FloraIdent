@@ -12,7 +12,7 @@ struct TrainSet
     size_t size() { return data.size(); }
     bool empty()  { return data.empty(); }
 
-    vector<cv::Mat> data;
+    vector<ImageFile> data;
     vector<int> labels;
 };
 
@@ -20,7 +20,8 @@ class FloraIdent
 {
 public:
     void changeSettings(const array<bool, FEATURES_NUM>& features,
-                        const GISTParams& gist_params);
+                        const GISTParams& gist_params,
+                        bool clear_features = false);
 
     bool loadTrainSet(const string& dir, bool has_precompute_fts = false);
     void setTestImg(const cv::Mat& src);
@@ -32,6 +33,7 @@ public:
     string predict();
 
     void clearData();
+    void clearFeatures();
 
 private:
     void initDistMat();
@@ -45,20 +47,23 @@ private:
         return nextafter(val, numeric_limits<T>::max()) - val;
     };
 
+    FeatureExtractor ft_extor;
+
+    // Train image set
     vector<string> cat_set;
     TrainSet train_set;
 
-    FeatureExtractor ft_extor;
-
+    // Features of train image set
     cv::Mat train_fts;
     vector<int> cand_idx;
-
-    cv::Mat test_img;
-    cv::Mat test_ft;
 
     vector<ml::SVM> svm_set;
     ml::KNN classifier;
     cv::Mat dist_mat;
+
+    // Test image and its feature
+    cv::Mat test_img;
+    cv::Mat test_ft;
 };
 _CLANY_END
 

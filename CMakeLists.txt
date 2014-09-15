@@ -14,7 +14,7 @@ elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
   if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 4.7)
     message(FATAL_ERROR "GCC version need to be at least 4.7")
   endif()
-  set(CMAKE_CXX_FLAGS "-std=c++11 -fopenmp -O2 -fno-operator-names")
+  set(CMAKE_CXX_FLAGS "-std=c++11 -fopenmp -fno-operator-names")
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
   if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 3.2)
     message(FATAL_ERROR "Clang version need to be at least 3.2")
@@ -78,6 +78,7 @@ include_directories(${OpenCV_INCLUDE_DIRS})
 find_package(FFTW REQUIRED)
 include_directories(${FFTW_INCLUDES})
 
+# Find Eigen
 find_path(
   Eigen_INCLUDE_DIR
   NAMES Eigen

@@ -1,3 +1,4 @@
+#include "flora_ident_config.h"
 #if USE_QT_VER >= 5
  #include <QtWidgets/QApplication>
 #else

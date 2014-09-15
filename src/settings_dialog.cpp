@@ -14,8 +14,17 @@ SettingsDialog::SettingsDialog(QWidget* parent, Qt::WindowFlags flag)
     ui.setupUi(this);
 }
 
-void SettingsDialog::init(const FloraIdentSettings& settings)
+SettingsDialog::SettingsDialog(QWidget* parent, Qt::WindowFlags flag,
+                               const FloraIdentSettings& init_settings)
+    : SettingsDialog(parent, flag)
 {
+    init(init_settings);
+}
+
+void SettingsDialog::init(const FloraIdentSettings& init_settings)
+{
+    settings = init_settings;
+
     ui.GISTCheckBox->setChecked(settings.used_features[0]);
     ui.LaplRGBCheckBox->setChecked(settings.used_features[1]);
     ui.HSVHistCheckBox->setChecked(settings.used_features[2]);
@@ -35,22 +44,30 @@ void SettingsDialog::init(const FloraIdentSettings& settings)
 
 FloraIdentSettings SettingsDialog::getSettings()
 {
-    FloraIdentSettings settings;
+    FloraIdentSettings new_settings;
 
-    settings.used_features[0] = ui.GISTCheckBox->isChecked();
-    settings.used_features[1] = ui.LaplRGBCheckBox->isChecked();
-    settings.used_features[2] = ui.HSVHistCheckBox->isChecked();
-    settings.used_features[3] = ui.FourierHistCheckBox->isChecked();
-    settings.used_features[4] = ui.HoughHistCheckBox->isChecked();
+    new_settings.used_features[0] = ui.GISTCheckBox->isChecked();
+    new_settings.used_features[1] = ui.LaplRGBCheckBox->isChecked();
+    new_settings.used_features[2] = ui.HSVHistCheckBox->isChecked();
+    new_settings.used_features[3] = ui.FourierHistCheckBox->isChecked();
+    new_settings.used_features[4] = ui.HoughHistCheckBox->isChecked();
 
-    settings.gist_params.use_color = ui.ColorGISTCheckBox->isChecked();
-    settings.gist_params.width     = ui.GISTWidthSpinBox->value();
-    settings.gist_params.height    = ui.GISTHeightSpinBox->value();
-    settings.gist_params.blocks    = ui.GISTBlockSpinBox->value();
-    settings.gist_params.scale     = ui.GISTScaleSpinBox->value();
+    new_settings.gist_params.use_color = ui.ColorGISTCheckBox->isChecked();
+    new_settings.gist_params.width     = ui.GISTWidthSpinBox->value();
+    new_settings.gist_params.height    = ui.GISTHeightSpinBox->value();
+    new_settings.gist_params.blocks    = ui.GISTBlockSpinBox->value();
+    new_settings.gist_params.scale     = ui.GISTScaleSpinBox->value();
+    parseOrientaion(new_settings.gist_params.orients);
 
-    parseOrientaion(settings.gist_params.orients);
+    if (!equal(new_settings.used_features.begin(), new_settings.used_features.end(),
+               settings.used_features.begin())) {
+        if (QMessageBox::Yes == QMessageBox::question(this, "Feature list changed",
+            "You've changed the feature list, clear precomputed features?")) {
+            new_settings.clear_precomp_features = true;
+        }
+    }
 
+    settings = new_settings;
     return settings;
 }
 

@@ -22,7 +22,7 @@ class GIST : public ImgFeature {
 public:
     GIST() = default;
 
-    GIST(const GISTParams& gist_params) {
+    explicit GIST(const GISTParams& gist_params) {
         setParams(gist_params);
     }
 

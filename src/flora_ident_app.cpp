@@ -9,7 +9,8 @@ using namespace clany;
 void FloraIdentApp::setSettings(const FloraIdentSettings& settings)
 {
     this->settings = settings;
-    flora_ident.changeSettings(settings.used_features, settings.gist_params);
+    flora_ident.changeSettings(settings.used_features, settings.gist_params,
+                               settings.clear_precomp_features);
 }
 
 void FloraIdentApp::setLearningRate(int learning_rate)
@@ -24,12 +25,10 @@ bool FloraIdentApp::loadDataset(const string& dir_name)
     string folder_name = dir_name.substr(dir_name.rfind("/") + 1);
     if (folder_name == "Train" || folder_name == "train") {
         QDir curr_dir(dir_name.c_str());
-        curr_dir.cdUp();
         auto files = curr_dir.entryList(QDir::Files);
 
         bool has_train_fts = false;
-        if (files.contains("train_features.xml") && files.contains("svm_set_0"))
-        {
+        if (files.contains("train_features.xml") && files.contains("svm_set_0")) {
             has_train_fts = true;
         }
         return flora_ident.loadTrainSet(dir_name, has_train_fts);

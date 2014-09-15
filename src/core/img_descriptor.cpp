@@ -42,28 +42,6 @@ void FeatureExtractor::setGISTParams(const GISTParams& params)
 }
 
 
-void FeatureExtractor::extract(const vector<Mat>& samples, vector<Mat>& ft_vec)
-{
-    int ft_id = 0;
-    for (const auto& ex : feature_extractors) {
-        cout << "Extracting feature " << ++ft_id << endl;
-
-        int ft_dim = ex->size();
-        Mat features(samples.size(), ft_dim, CV_32FC1);
-
-        int sz = samples.size();
-#pragma omp parallel for
-        for (int i = 0; i < sz; ++i) {
-            float* data = features.ptr<float>(i);
-            vector<float> ft;
-            ex->extract(samples[i], ft);
-            memcpy(data, ft.data(), ft_dim * sizeof(float));
-        }
-        ft_vec.push_back(features);
-    }
-}
-
-
 void FeatureExtractor::extract(const Mat& src, vector<vector<float>>& features)
 {
     vector<float> ft;

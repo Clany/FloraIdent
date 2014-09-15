@@ -4,20 +4,15 @@
 #include "common.h"
 
 _CLANY_BEGIN
-class ImgFeature
-{
+class ImgFeature {
 public:
-    using Ptr = shared_ptr < ImgFeature > ;
+    using Ptr = shared_ptr<ImgFeature>;
 
-    void extract(const cv::Mat& src, vector<float>& feature)
-    {
+    void extract(const cv::Mat& src, vector<float>& feature) {
         getFeature(src, feature);
-    };
+    }
 
-    int size()
-    {
-        return getDim();
-    };
+    int size() { return getDim(); }
 
 private:
     virtual void getFeature(const cv::Mat& src, vector<float>& feature) = 0;

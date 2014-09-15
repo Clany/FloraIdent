@@ -1,6 +1,7 @@
 #include <random>
 #include <cmath>
 #include <QDir>
+#include <QDirIterator>
 #include "clany/eigen.hpp"
 #include "Eigen/Sparse"
 #include <opencv2/core/eigen.hpp>
@@ -22,7 +23,8 @@ namespace  {
 
 
 void FloraIdent::changeSettings(const array<bool, FEATURES_NUM>& features,
-                                const GISTParams& gist_params)
+                                const GISTParams& gist_params,
+                                bool clear_features)
 {
     using FeatureFlag = FeatureExtractor::FeatureFlag;
 
@@ -35,40 +37,44 @@ void FloraIdent::changeSettings(const array<bool, FEATURES_NUM>& features,
 
     ft_extor.setFeatures(static_cast<FeatureFlag>(ft_flag));
     ft_extor.setGISTParams(gist_params);
+
+    if (clear_features) clearFeatures();
 }
 
 bool FloraIdent::loadTrainSet(const string& dir, bool has_precompute_fts)
 {
-    QDir curr_dir(dir.c_str());
-    auto loc_list = curr_dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
-    int label = 0;
-    for (const auto& loc : loc_list) {
-        QDir cat_dir(curr_dir.filePath(loc));
-        auto cat_list = cat_dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
-        for (const auto& cat : cat_list) {
-            QDir file_dir(cat_dir.filePath(cat));
-            auto file_list = file_dir.entryList(QDir::Files);
-            for (const auto& fn : file_list) {
-                train_set.data.push_back(imread(file_dir.filePath(fn).toStdString()));
-                train_set.labels.push_back(label);
-            }
-            cat_set.push_back(cat.toStdString());
+    QStringList name_filters;
+    name_filters << "*.jpg" << "*.jpeg" << "*.bmp" << "*.tiff" << "*.png";
+    QDirIterator dir_iter(dir.c_str(), name_filters,
+                          QDir::Files, QDirIterator::Subdirectories);
+
+    QString old_cat("");
+    int label = -1;
+    while (dir_iter.hasNext()) {
+        auto file_name = dir_iter.next();
+        auto cate_name = dir_iter.fileInfo().dir().dirName();
+        if (cate_name != old_cat) {
             ++label;
+            old_cat = cate_name;
+            cat_set.push_back(cate_name.toStdString());
         }
+
+        train_set.data.emplace_back(file_name.toStdString());
+        train_set.labels.push_back(label);
     }
+
     // Load precompute features if exist
     if (has_precompute_fts) {
-        curr_dir.cdUp();
-        auto file_list = curr_dir.entryList(QDir::Files);
-        for (const auto& fn : file_list) {
-            auto file = curr_dir.filePath(fn).toStdString();
-            if (file.find("train_features.xml") != string::npos) {
-                FileStorage ifs(file, FileStorage::READ);
+        QDirIterator dir_iter(dir.c_str(), QDir::Files);
+        while (dir_iter.hasNext()) {
+            auto file_name = dir_iter.next().toStdString();
+            if (file_name.find("train_features") != string::npos) {
+                FileStorage ifs(file_name, FileStorage::READ);
                 read(ifs["features"], train_fts);
                 read(ifs["dist_mat"], dist_mat);
             }
-            if (file.find("svm_set") != string::npos) {
-                ml::SVM svm(file);
+            if (file_name.find("svm_set") != string::npos) {
+                ml::SVM svm(file_name);
                 svm_set.push_back(svm);
             }
         }
@@ -138,7 +144,7 @@ void FloraIdent::genTrainFeatures()
 void FloraIdent::genTestFeatures()
 {
     vector<Mat> test_ft_vec;
-    ft_extor.extract({test_img}, test_ft_vec);
+    ft_extor.extract(vector<Mat> {test_img}, test_ft_vec);
 
     size_t cat_sz = cat_set.size();
     test_ft.create(1, cat_sz*test_ft_vec.size(), CV_64FC1);
@@ -353,8 +359,15 @@ void FloraIdent::clearData()
     train_set.data.clear();
     train_set.labels.clear();
 
-    if (!train_fts.empty()) train_fts.setTo(0);
-    if (!dist_mat.empty())  dist_mat.setTo(0);
+    if (!train_fts.empty()) train_fts.release();
+    if (!dist_mat.empty())  dist_mat.release();
 
     svm_set.clear();
+}
+
+void FloraIdent::clearFeatures()
+{
+    svm_set.clear();
+    train_fts.release();
+    dist_mat.release();
 }

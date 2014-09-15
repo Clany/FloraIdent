@@ -11,7 +11,6 @@
 #include <numeric>
 #include <chrono>
 #include <opencv2/opencv.hpp>
-#include "flora_ident_config.h"
 #include "clany/clany_macros.h"
 
 #if defined _MSC_VER && _MSC_VER <= 1800

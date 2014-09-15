@@ -46,6 +46,7 @@ void MainWindow::loadDataset(const QString& dir)
             ui.outputPanel->insertPlainText("done.");
 
             ui.loadImageButton->setEnabled(true);
+            ui.settingsButton->setEnabled(true);
         } else {
             ui.outputPanel->moveCursor(QTextCursor::End);
             ui.outputPanel->insertPlainText("error, dataset is not correctly loaded!");
@@ -143,8 +144,8 @@ void MainWindow::on_lastSelectionButton_clicked()
 
 void MainWindow::on_settingsButton_clicked()
 {
-    SettingsDialog dialog(this, Qt::WindowTitleHint | Qt::WindowCloseButtonHint);
-    dialog.init(flora_app.getSettings());
+    SettingsDialog dialog(this, Qt::WindowTitleHint | Qt::WindowCloseButtonHint,
+                          flora_app.getSettings());
     if (QDialog::Accepted == dialog.exec()) {
         flora_app.setSettings(dialog.getSettings());
     }
@@ -200,6 +201,7 @@ void MainWindow::on_generateCandidatesButton_clicked()
 
     ui.candidateGroup->setEnabled(true);
     ui.updateCandidatesButton->setEnabled(true);
+    ui.lastSelectionButton->setEnabled(true);
     ui.finishButton->setEnabled(true);
     ui.settingsButton->setDisabled(true);
 }
@@ -208,9 +210,9 @@ void MainWindow::on_updateCandidatesButton_clicked()
 {
     getUserResponses(last_selection);
 
-//     flora_app.updateCandidates(last_selection);
-//     flora_app.getCandidates(candidates);
-//     showCandidates();
+    flora_app.updateCandidates(last_selection);
+    flora_app.getCandidates(candidates);
+    showCandidates();
     resetCandButton();
 }
 
@@ -221,7 +223,6 @@ void MainWindow::on_finishButton_clicked()
 
     ui.candidateGroup->setDisabled(true);
     ui.generateCandidatesButton->setDisabled(true);
-    ui.updateCandidatesButton->setDisabled(true);
     ui.finishButton->setDisabled(true);
     ui.settingsButton->setEnabled(true);
 }
