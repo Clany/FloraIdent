@@ -61,10 +61,10 @@ void GIST::getFeature(const Mat& _src, vector<float>& result)
     assert(!_src.empty());
     cv::Mat src(_src.clone());
 
-    double h = params.height;
-    double w = params.width;
-    double h_ratio = h / src.rows;
-    double w_ratio = w / src.cols;
+    int h = params.height;
+    int w = params.width;
+    double h_ratio = static_cast<double>(h) / src.rows;
+    double w_ratio = static_cast<double>(w) / src.cols;
 
     Mat cropped(src);
     if (h_ratio < w_ratio) {

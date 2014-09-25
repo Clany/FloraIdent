@@ -108,12 +108,12 @@ void FloraIdent::genTrainFeatures()
         size_t train_sz = train_set.size();
         size_t cat_sz = cat_set.size();
         train_fts.create(train_sz, cat_sz*train_ft_vec.size(), CV_64FC1);
-        for (int i = 0; i < train_ft_vec.size(); ++i) {
+        for (auto i = 0u; i < train_ft_vec.size(); ++i) {
             train_ft_vec[i].convertTo(train_ft_vec[i], CV_64F);
 
             ml::SVM svm;
             svm.train(train_ft_vec[i], train_set.labels);
-            for (int j = 0; j < train_sz; ++j) {
+            for (auto j = 0u; j < train_sz; ++j) {
                 ml::SVMNode node;
                 node.dim = train_ft_vec[i].cols;
                 node.values = train_ft_vec[i].ptr<double>(j);
@@ -148,7 +148,7 @@ void FloraIdent::genTestFeatures()
 
     size_t cat_sz = cat_set.size();
     test_ft.create(1, cat_sz*test_ft_vec.size(), CV_64FC1);
-    for (int i = 0; i < svm_set.size(); ++i) {
+    for (auto i = 0u; i < svm_set.size(); ++i) {
         test_ft_vec[i].convertTo(test_ft_vec[i], CV_64F);
 
         ml::SVMNode node;
@@ -271,7 +271,7 @@ void FloraIdent::initDistMat()
             err_count += updateDistMat(train_fts.row(pair.first), train_set.labels[pair.first],
                                        train_fts.row(pair.second), train_set.labels[pair.second], 0.1);
         }
-        timer.elapsed("Elapsed time");
+        timer.delta(3, "Elapsed time");
         cout << err_count << endl;
         if (err_count < min_err_count) {
             min_err_count = err_count;
@@ -300,9 +300,7 @@ int FloraIdent::updateDistMat(const Mat& x1, int y1, const Mat& x2, int y2, doub
     Mat A = dist_mat;
     int yt = y1 == y2 ? 1 : -1;
     Mat delta_x = x1 - x2;
-#ifndef NDEBUG
-    double dist = (delta_x * A).dot(delta_x);
-#endif
+
     if (yt * (1 - (delta_x * A).dot(delta_x)) > 0) return 0;
 
     double lambda_t = lambda;

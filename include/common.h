@@ -18,7 +18,7 @@
 #endif
 
 _CLANY_BEGIN
-const uint RAND_SEED = chrono::system_clock::now().time_since_epoch().count();
+const llong RAND_SEED = chrono::system_clock::now().time_since_epoch().count();
 _CLANY_END
 
 #endif // COMMON_H

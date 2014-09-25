@@ -22,7 +22,6 @@ void HoughHist::getFeature(const Mat& src, vector<float>& hist)
     double max_r = numeric_limits<double>::min();
     array<vector<double>, 8> tmp;
     for (int y = 0; y < img.rows; ++y) {
-        uchar* data = img.ptr<uchar>(y);
         double* dx = dx_map.ptr<double>(y);
         double* dy = dy_map.ptr<double>(y);
         for (int x = 0; x < img.cols; ++x) {

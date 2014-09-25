@@ -22,6 +22,8 @@ typedef unsigned short ushort;
 typedef unsigned char uchar;
 typedef unsigned int uint;
 typedef unsigned long ulong;
+typedef long long llong;
+typedef unsigned long long ullong;
 
 _CLANY_BEGIN
 using namespace std;

@@ -42,7 +42,7 @@ int KNN::predict(const Mat& sample, int k, OutputArray neighbor_idx,
         dist_ptr = &dist_mat;
     }
 
-    int cat = find_nearest(sample, k, nullptr, idx_ptr, resp_ptr, dist_ptr);
+    int cat = static_cast<int>(find_nearest(sample, k, nullptr, idx_ptr, resp_ptr, dist_ptr));
 
     if (idx_ptr) {
         int* p = neighbor_idx.getMat().ptr<int>();

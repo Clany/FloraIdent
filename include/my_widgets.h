@@ -14,18 +14,17 @@ class SelectionArea : public QWidget
 public:
     using Ptr = std::unique_ptr<SelectionArea>;
 
-    explicit SelectionArea(QWidget *parent = 0);
+    explicit SelectionArea(QWidget* parent = 0);
 
     void addSizeGrip();
 
 private:
-    void mousePressEvent(QMouseEvent *ev)   override;
-    void mouseMoveEvent(QMouseEvent *ev)    override;
-    void mouseReleaseEvent(QMouseEvent *ev) override;
-    void resizeEvent(QResizeEvent *)        override;
+    void mousePressEvent(QMouseEvent* ev)   override;
+    void mouseMoveEvent(QMouseEvent* ev)    override;
+    void resizeEvent(QResizeEvent* ev)      override;
 
     QPoint origin;
-    QRubberBand* rubberband;
+    QRubberBand* rubberband = nullptr;
 };
 
 class ImageLabel : public QLabel
@@ -42,9 +41,9 @@ public:
     float getRatio() { return ratio; };
 
 private:
-    void mousePressEvent(QMouseEvent *ev)   override;
-    void mouseMoveEvent(QMouseEvent *ev)    override;
-    void mouseReleaseEvent(QMouseEvent *ev) override;
+    void mousePressEvent(QMouseEvent* ev)   override;
+    void mouseMoveEvent(QMouseEvent* ev)    override;
+    void mouseReleaseEvent(QMouseEvent* ev) override;
 
     float ratio;
     QSize org_sz;

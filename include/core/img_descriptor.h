@@ -30,6 +30,9 @@ public:
 
     FeatureExtractor();
 
+    FeatureExtractor(const FeatureExtractor&) = delete;
+    FeatureExtractor& operator= (const FeatureExtractor&) = delete;
+
 //     void extract(const vector<cv::Mat>& samples, vector<cv::Mat>& ft_vec);
 //     void extract(const vector<ImageFile>& samples, vector<cv::Mat>& ft_vec);
 

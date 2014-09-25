@@ -10,7 +10,7 @@
 #  include <sys/times.h>
 #  define CLOCK()  ::times(NULL)
 #  define TICK_FACTOR  TICK_PER_SECOND
-   static const int TICK_PER_SECOND = ::sysconf(_SC_CLK_TCK);
+   const int TICK_PER_SECOND = ::sysconf(_SC_CLK_TCK);
 #endif
 
 #include <iostream>
@@ -29,7 +29,7 @@ public:
     {
         timer_ = CLOCK() - timer_;
         cout << setprecision(precision_) << "Time elapsed: "
-             << static_cast<float>(timer_) / TICK_FACTOR << "s"
+             << static_cast<double>(timer_) / TICK_FACTOR << "s"
              << endl;
     }
 
@@ -42,33 +42,47 @@ private:
 class CPUTimer
 {
 public:
-    CPUTimer(int precision = 3, bool is_started = true) :
-        timer_(0), duration_berfore_(0), precision_(precision), is_stopped_(false)
+    CPUTimer(bool is_started = true) :
+        timer_(0), duration_berfore_(0), is_stopped_(false)
     {
         if (is_started) {
             start();
         }
     }
 
-    void elapsed(string process_name = "Since last check")
+    double elapsed(int precision = 3, string process_name = "Since begin")
     {
         if (is_stopped_) {
             cout << "Paused" << endl;
-            return;
+            return -1;
         }
 
-        float last_duration = static_cast<float>(CLOCK() - timer_) / TICK_FACTOR;
-        cout << setprecision(precision_) << process_name.c_str() << ": "
-             << last_duration << "s";
-        if (process_name == "Since last check") {
-            cout << "   " << "Since begin: "
-                 << last_duration + duration_berfore_ << "s" << endl;
-        } else {
-            cout << endl;
+        double last_duration = static_cast<double>(CLOCK() - timer_) / TICK_FACTOR;
+        double since_begin = last_duration + duration_berfore_;
+        cout << setprecision(precision) << process_name.c_str() << ": "
+             << since_begin << "s" << endl;
+             
+        timer_ = CLOCK();
+        duration_berfore_ += last_duration;
+        
+        return since_begin;
+    }
+    
+    double delta(int precision = 3, string process_name = "Since last check")
+    {
+        if (is_stopped_) {
+            cout << "Paused" << endl;
+            return -1;
         }
+
+        double last_duration = static_cast<double>(CLOCK() - timer_) / TICK_FACTOR;
+        cout << setprecision(precision) << process_name.c_str() << ": "
+             << last_duration << "s" << endl;
 
         timer_ = CLOCK();
         duration_berfore_ += last_duration;
+        
+        return last_duration;
     }
 
     void start()
@@ -81,7 +95,7 @@ public:
     {
         if (!is_stopped_) {
             is_stopped_ = true;
-            duration_berfore_ += static_cast<float>(CLOCK() - timer_) / TICK_FACTOR;
+            duration_berfore_ += static_cast<double>(CLOCK() - timer_) / TICK_FACTOR;
         }
     }
 
@@ -101,8 +115,7 @@ public:
 
 private:
     clock_t timer_;
-    float duration_berfore_;
-    int precision_;
+    double duration_berfore_;
     bool is_stopped_;
 };
 _CLANY_END

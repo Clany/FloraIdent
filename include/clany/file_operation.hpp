@@ -8,11 +8,8 @@
 #include <stdexcept>
 #include <limits>
 
-#if defined(WIN32) || defined(_WIN32) || defined(__MINGW32__)
-#  include <windows.h>
-#  include <tchar.h>
-#  undef max
-#  undef min
+#if defined _WIN32 && defined _MSC_VER && _MSC_VER >= 1800
+#  include <filesystem>
 #else
 #  include <dirent.h>
 #endif
@@ -20,7 +17,7 @@
 #include "clany_macros.h"
 
 _CLANY_BEGIN
-using ifsbuf_iter = istreambuf_iterator<char>;
+typedef istreambuf_iterator<char> ifsbuf_iter;
 
 class FileExcept :public runtime_error
 {
@@ -31,12 +28,12 @@ public:
 
 inline string fileToString(const string& file_name)
 {
-    ifstream ifs {file_name};
+    ifstream ifs(file_name);
     if (!ifs.is_open()) {
         throw FileExcept("Could not open file " + file_name);
     }
 
-    return string {ifsbuf_iter{ifs}, ifsbuf_iter{}};
+    return string(ifsbuf_iter(ifs), ifsbuf_iter());
 }
 
 
@@ -64,6 +61,20 @@ inline string getLineStr(ifstream& file, int num)
     getline(file, curr_line);
 
     return curr_line;
+}
+
+
+inline int countLine(const string& file_name)
+{
+    ifstream ifs (file_name);
+
+    int count = 0;
+    string tmp;
+    while (getline(ifs, tmp)) {
+        ++count;
+    }
+
+    return count;
 }
 _CLANY_END
 

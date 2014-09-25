@@ -12,29 +12,26 @@ set(SRC_LIST
   core/svm.cpp
   core/knn.cpp
   core/flora_ident.cpp
-  3rdparty/libsvm.cpp
-  3rdparty/libgist.cpp
-  3rdparty/standalone_image.cpp
+  ../3rdparty/src/libsvm.cpp
+  ../3rdparty/src/libgist.cpp
+  ../3rdparty/src/standalone_image.cpp
 )
 
 set(HEADER_LIST
-  ${PROJ_INCLUDE_DIR}/mainwindow.h
-  ${PROJ_INCLUDE_DIR}/settings_dialog.h
-  ${PROJ_INCLUDE_DIR}/my_widgets.h
-  ${PROJ_INCLUDE_DIR}/flora_ident_app.h
-  ${PROJ_INCLUDE_DIR}/common.h
-  ${PROJ_INCLUDE_DIR}/core/img_feature.h
-  ${PROJ_INCLUDE_DIR}/core/color_hist.h
-  ${PROJ_INCLUDE_DIR}/core/fourier_hist.h
-  ${PROJ_INCLUDE_DIR}/core/hough_hist.h
-  ${PROJ_INCLUDE_DIR}/core/img_descriptor.h
-  ${PROJ_INCLUDE_DIR}/core/gist.h
-  ${PROJ_INCLUDE_DIR}/core/svm.h  
-  ${PROJ_INCLUDE_DIR}/core/knn.h
-  ${PROJ_INCLUDE_DIR}/core/flora_ident.h
-  ${PROJ_INCLUDE_DIR}/3rdparty/libsvm.h
-  ${PROJ_INCLUDE_DIR}/3rdparty/libgist.h
-  ${PROJ_INCLUDE_DIR}/3rdparty/standalone_image.h
+  ../include/mainwindow.h
+  ../include/settings_dialog.h
+  ../include/my_widgets.h
+  ../include/flora_ident_app.h
+  ../include/common.h
+  ../include/core/img_feature.h
+  ../include/core/color_hist.h
+  ../include/core/fourier_hist.h
+  ../include/core/hough_hist.h
+  ../include/core/img_descriptor.h
+  ../include/core/gist.h
+  ../include/core/svm.h  
+  ../include/core/knn.h
+  ../include/core/flora_ident.h
 )
 
 WRAP_UI_FILE(HEADER_UI

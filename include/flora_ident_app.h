@@ -44,8 +44,8 @@ private:
     void matToQImage(InputIterator first, InputIterator last, OutputIterator result) {
         static_assert(is_input_iterator<InputIterator>::value, "first/last are not an input iterator");
         static_assert(is_output_iterator<OutputIterator>::value, "result is not an output iterator");
-        CHECK_TYPE(decltype(*first), cv::Mat, "Input type is not Mat");
-        CHECK_TYPE(decltype(*result), QImage, "Output type is not QImage");
+        static_assert(is_same<decltype(*first), cv::Mat&>::value, "Input type is not Mat");
+        static_assert(is_same<decltype(*result), QImage&>::value, "Output type is not QImage");
 
         while (first != last) {
             matToQImage(*first, *result);

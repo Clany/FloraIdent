@@ -88,7 +88,7 @@ void ProbRGB::reduceRGB(const cv::Mat& src, cv::Mat& dst)
         const uchar* src_ptr = src.ptr<uchar>(y);
         uchar* dst_ptr = dst.ptr<uchar>(y);
         for (int x = 0; x < nc; ++x) {
-            dst_ptr[x] = src_ptr[x] / div * div + div / 2;
+            dst_ptr[x] = static_cast<uchar>(src_ptr[x] / div * div + div / 2);
         }
     }
 }

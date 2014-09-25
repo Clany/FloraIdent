@@ -15,16 +15,23 @@ SelectionArea::SelectionArea(QWidget *parent) : QWidget(parent)
     setWindowFlags(Qt::SubWindow);
     setCursor(QCursor(Qt::CursorShape::SizeAllCursor));
 
+    if (layout()) delete layout();
+
     rubberband = new QRubberBand(QRubberBand::Rectangle, this);
     rubberband->show();
 }
 
 void SelectionArea::addSizeGrip()
 {
-    QHBoxLayout* layout = new QHBoxLayout(this);
-    layout->setContentsMargins(QMargins());
-    layout->addWidget(new QSizeGrip(this), 0, Qt::AlignLeft | Qt::AlignTop);
-    layout->addWidget(new QSizeGrip(this), 0, Qt::AlignRight | Qt::AlignBottom);
+    if (layout() == nullptr) {
+        setLayout(new QGridLayout(this));
+        auto grid_layout = (QGridLayout*)layout();
+        grid_layout->setContentsMargins(QMargins());
+        grid_layout->addWidget(new QSizeGrip(this), 0, 0, Qt::AlignLeft | Qt::AlignTop);
+        grid_layout->addWidget(new QSizeGrip(this), 1, 0, Qt::AlignLeft | Qt::AlignBottom);
+        grid_layout->addWidget(new QSizeGrip(this), 0, 1, Qt::AlignRight | Qt::AlignTop);
+        grid_layout->addWidget(new QSizeGrip(this), 1, 1, Qt::AlignRight | Qt::AlignBottom);
+    }
 }
 
 void SelectionArea::mousePressEvent(QMouseEvent *ev)
@@ -49,9 +56,6 @@ void SelectionArea::mouseMoveEvent(QMouseEvent *ev)
     }
 }
 
-void SelectionArea::mouseReleaseEvent(QMouseEvent *ev)
-{}
-
 void SelectionArea::resizeEvent(QResizeEvent *)
 {
     rubberband->resize(size());
@@ -75,7 +79,7 @@ void ImageLabel::mouseMoveEvent(QMouseEvent *ev)
     this->repaint();
 }
 
-void ImageLabel::mouseReleaseEvent(QMouseEvent *ev)
+void ImageLabel::mouseReleaseEvent(QMouseEvent*)
 {
     selection_area->addSizeGrip();
 }
