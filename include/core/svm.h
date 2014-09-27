@@ -3,14 +3,13 @@
 
 #include <memory>
 #include <opencv2/ml/ml.hpp>
-#include "clany/clany_macros.h"
+#include "clany/clany_defs.h"
 
 #define _DENSE_REP
 #include "libsvm.h"
 
 _CLANY_BEGIN
 namespace ml {
-
 using SVMNode = svm_node;
 using SVMProblem = svm_problem;
 using SVMModel = svm_model;
@@ -53,7 +52,6 @@ private:
     SVMParameter params;
     shared_ptr<SVMModel> model_ptr;
 };
-
 } // End namespace ml
 _CLANY_END
 

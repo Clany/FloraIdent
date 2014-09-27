@@ -16,7 +16,7 @@
 #include <iostream>
 #include <iomanip>
 
-#include "clany_macros.h"
+#include "clany_defs.h"
 
 
 _CLANY_BEGIN

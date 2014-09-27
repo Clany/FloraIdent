@@ -14,7 +14,7 @@
 #  include <dirent.h>
 #endif
 
-#include "clany_macros.h"
+#include "clany_defs.h"
 
 _CLANY_BEGIN
 typedef istreambuf_iterator<char> ifsbuf_iter;

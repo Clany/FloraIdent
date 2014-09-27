@@ -1,20 +1,11 @@
-#ifndef TRAITS_HPP
-#define TRAITS_HPP
+#ifndef CLANY_TRAITS_HPP
+#define CLANY_TRAITS_HPP
 
 #include <iterator>
 #include <type_traits>
-#include "clany_macros.h"
+#include "clany_defs.h"
 
 _CLANY_BEGIN
-#define CHECK_TYPE(T1, T2, msg) static_assert(is_same<typename remove_constref<T1>::type, \
-                                                      typename remove_constref<T2>::type>::value, #msg)
-
-template<typename T>
-struct remove_constref
-{
-    using type = typename remove_const<typename remove_reference<T>::type>::type;
-};
-
 //////////////////////////////////////////////////////////////////////////
 // Iterator traits
 template<typename T, typename = void>
@@ -125,4 +116,4 @@ struct is_random_access_iterator<T, true> : integral_constant<bool, is_base_of<r
 {};
 _CLANY_END
 
-#endif // TRAITS_HPP
+#endif // CLANY_TRAITS_HPP
