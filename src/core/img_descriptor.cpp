@@ -1,3 +1,4 @@
+#include <tbb/tbb.h>
 #include "core/img_descriptor.h"
 
 using namespace std;
@@ -76,14 +77,12 @@ void FeatureExtractor::extract(const vector<ImageFile>& samples, vector<cv::Mat>
         int ft_dim = ex->size();
         cv::Mat features(samples.size(), ft_dim, CV_32FC1);
 
-        int sz = samples.size();
-#pragma omp parallel for
-        for (int i = 0; i < sz; ++i) {
+        tbb::parallel_for(0, features.rows, [&samples, &features, &ex, ft_dim](int i) {
             float* data = features.ptr<float>(i);
             vector<float> ft;
             ex->extract(samples[i], ft);
             memcpy(data, ft.data(), ft_dim * sizeof(float));
-        }
+        });
         cout << "done" << endl;
 
         // Scale value range to [0, 1]

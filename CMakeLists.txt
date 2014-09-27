@@ -9,9 +9,9 @@ include(Utilities)
 
 # Compiler detection
 find_compiler(
-  GNU   4.7  "-std=c++11 -Wall -fopenmp -fno-operator-names"
-  Clang 3.2  "-std=c++11 -Wall -fopenmp -fno-operator-names"
-  MSVC  2013 "/W4 /openmp"
+  GNU   4.7  "-std=c++11 -Wall -fno-operator-names"
+  Clang 3.2  "-std=c++11 -Wall -Wno-overloaded-virtual -fno-operator-names"
+  MSVC  2013 "/W4"
 )
 
 option(USE_MY_PATH "Use my own default library path" OFF)
@@ -56,6 +56,9 @@ include_directories(${FFTW_INCLUDES})
 
 find_package(Eigen3 REQUIRED)
 include_directories(${EIGEN3_INCLUDE_DIR})
+
+find_package(TBB REQUIRED)
+include_directories(${TBB_INCLUDE_DIRS})
 
 configure_file (
   "${PROJECT_SOURCE_DIR}/include/flora_ident_config.h.in"

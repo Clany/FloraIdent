@@ -40,4 +40,4 @@ WRAP_UI_FILE(HEADER_UI
 )
 
 add_executable(FloraIdent WIN32 ${SRC_LIST} ${HEADER_LIST} ${HEADER_UI})
-target_link_libraries(FloraIdent ${Qt_LIBS} ${OpenCV_LIBS} ${FFTWF_LIB})
+target_link_libraries(FloraIdent ${Qt_LIBS} ${OpenCV_LIBS} ${FFTWF_LIB} ${TBB_LIBRARIES})

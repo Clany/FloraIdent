@@ -18,7 +18,6 @@ namespace  {
     constexpr double EPSD = numeric_limits<double>::epsilon();
     constexpr float MAX_FLOAT = numeric_limits<float>::max();
     constexpr double MAX_DOUBLE = numeric_limits<double>::max();
-    constexpr int MAX_ITER = 5;
 } // Unnamed namespace
 
 
