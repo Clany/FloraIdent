@@ -73,7 +73,14 @@ void ImageLabel::mousePressEvent(QMouseEvent *ev)
 void ImageLabel::mouseMoveEvent(QMouseEvent *ev)
 {
     if (ev->buttons() & Qt::LeftButton) {
-        selection_area->setGeometry(QRect(origin, ev->pos()).normalized());
+        // Prevent to move out of canvas
+        QPoint dst = ev->pos();
+        if (dst.x() < 0) dst.setX(0);
+        if (dst.y() < 0) dst.setY(0);
+        if (dst.x() > width()  - 1) dst.setX(width()  - 1);
+        if (dst.y() > height() - 1) dst.setY(height() - 1);
+
+        selection_area->setGeometry(QRect(origin, dst).normalized());
         selection_area->show();
     }
     this->repaint();
