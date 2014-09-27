@@ -65,19 +65,23 @@ bool FloraIdent::loadTrainSet(const string& dir, bool has_precompute_fts)
 
     // Load precompute features if exist
     if (has_precompute_fts) {
+        FileStorage ifs;
+        Mat scale_mat;
         QDirIterator dir_iter(dir.c_str(), QDir::Files);
         while (dir_iter.hasNext()) {
             auto file_name = dir_iter.next().toStdString();
             if (file_name.find("train_features") != string::npos) {
-                FileStorage ifs(file_name, FileStorage::READ);
-                read(ifs["features"], train_fts);
-                read(ifs["dist_mat"], dist_mat);
+                ifs.open(file_name, FileStorage::READ);
+                ifs["features"]  >> train_fts;
+                ifs["dist_mat"]  >> dist_mat;
+                ifs["scale_mat"] >> scale_mat;
             }
             if (file_name.find("svm_set") != string::npos) {
                 ml::SVM svm(file_name);
                 svm_set.push_back(svm);
             }
         }
+        ft_extor.setScaleFacotrs(scale_mat);
     }
 
     if (train_set.empty()) return false;
@@ -112,12 +116,14 @@ void FloraIdent::genTrainFeatures()
             train_ft_vec[i].convertTo(train_ft_vec[i], CV_64F);
 
             ml::SVM svm;
+            cout << "Training SVM for feature " << i+1 << "..." << endl;
             svm.train(train_ft_vec[i], train_set.labels);
+            cout << string(50, '-') << endl;
             for (auto j = 0u; j < train_sz; ++j) {
                 ml::SVMNode node;
                 node.dim = train_ft_vec[i].cols;
                 node.values = train_ft_vec[i].ptr<double>(j);
-                svm.predict(node, train_fts.ptr<double>(j) +i*cat_sz, true);
+                svm.predict(node, train_fts.ptr<double>(j) + i*cat_sz, true);
             }
             svm_set.push_back(svm);
         }
@@ -127,8 +133,8 @@ void FloraIdent::genTrainFeatures()
 
         // Save features and distance matrix on disk
         FileStorage ofs("train_features.xml", FileStorage::WRITE);
-        write(ofs, "features", train_fts);
-        write(ofs, "dist_mat", dist_mat);
+        ofs << "features"  << train_fts << "dist_mat" << dist_mat
+            << "scale_mat" << ft_extor.getScaleFactors();
 
         int i = 0;
         for (const auto& svm : svm_set) {
@@ -144,7 +150,7 @@ void FloraIdent::genTrainFeatures()
 void FloraIdent::genTestFeatures()
 {
     vector<Mat> test_ft_vec;
-    ft_extor.extract(vector<Mat> {test_img}, test_ft_vec);
+    ft_extor.extract(test_img, test_ft_vec);
 
     size_t cat_sz = cat_set.size();
     test_ft.create(1, cat_sz*test_ft_vec.size(), CV_64FC1);
@@ -259,10 +265,9 @@ void FloraIdent::initDistMat()
         }
     }
 
-    // Random shuffle all the pairs and update distance matrix
-    // until converge, i.e., 5 full passes are made without improvements
+    // Random shuffle all the pairs and update distance matrix until
+    // error count is less than 5%
     int min_err_count = numeric_limits<int>::max();
-    int iter_count = 0;
     while (true) {
         shuffle(pairs.begin(), pairs.end(), default_random_engine(RAND_SEED));
         int err_count = 0;
@@ -272,16 +277,16 @@ void FloraIdent::initDistMat()
                                        train_fts.row(pair.second), train_set.labels[pair.second], 0.1);
         }
         timer.delta(3, "Elapsed time");
-        cout << err_count << endl;
+        float ratio = static_cast<float>(err_count) / pair_sz;
+
+        cout.setf(ios::left);
+        cout << "Error count: " << setw(9) << err_count << ratio * 100 << "%" << endl;
         if (err_count < min_err_count) {
             min_err_count = err_count;
-            iter_count = 0;
             A = dist_mat.clone();
         }
-        ++iter_count;
-        if (iter_count > MAX_ITER) {
-            break;
-        }
+
+        if (ratio < 0.05) break;
     }
     dist_mat = A.clone();
 

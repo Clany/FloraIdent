@@ -13,13 +13,13 @@ using namespace clany;
 
 int main(int argc, char *argv[])
 {
-   QApplication app(argc, argv);
-   MainWindow w;
-   w.show();
+    QApplication app(argc, argv);
+    MainWindow w;
+    w.show();
 
-   if (argc != 1) {
-       w.loadDataset(argv[1]);
-   }
+    if (argc != 1) {
+        w.loadDataset(argv[1]);
+    }
 
-   return app.exec();
+    return app.exec();
 }

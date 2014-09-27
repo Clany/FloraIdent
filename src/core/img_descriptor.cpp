@@ -42,35 +42,60 @@ void FeatureExtractor::setGISTParams(const GISTParams& params)
 }
 
 
-void FeatureExtractor::extract(const Mat& src, vector<vector<float>>& features)
+void FeatureExtractor::extract(const Mat& samples, vector<cv::Mat>& ft_vec)
 {
-    vector<float> ft;
-
+    auto scale_ptr = scale_mat.ptr<float>();
     for (const auto& ex : feature_extractors) {
-        ex->extract(src, ft);
-        features.push_back(move(ft));
+        int ft_dim = ex->size();
+        cv::Mat features(1, ft_dim, CV_32FC1);
+
+        float* data = features.ptr<float>();
+        vector<float> ft;
+        ex->extract(samples, ft);
+        memcpy(data, ft.data(), ft_dim * sizeof(float));
+
+        // Scale each column to [0, 1]
+        float a = *scale_ptr++;
+        float b = *scale_ptr++;
+        features = a*features + b;
+
+        ft_vec.push_back(features);
     }
 }
 
 
-void FeatureExtractor::mergeFeature(const vector<vector<vector<float>>>& features_src,
-                                    vector<vector<float>>& features_dst)
+void FeatureExtractor::extract(const vector<ImageFile>& samples, vector<cv::Mat>& ft_vec)
 {
-    features_dst.clear();
-    features_dst.resize(features_src.size());
+    scale_mat.release();
+    scale_mat.create(feature_extractors.size(), 2, CV_32F);
+    auto scale_ptr = scale_mat.ptr<float>();
+    int ft_id = 0;
+    for (const auto& ex : feature_extractors) {
+        cout << "Extracting feature " << ++ft_id << "...";
 
-    int sz = features_dst.size();
-    for (int i = 0; i < sz; ++i) {
-        const auto& ft_vec = features_src[i];
-        auto& ft_dst = features_dst[i];
+        int ft_dim = ex->size();
+        cv::Mat features(samples.size(), ft_dim, CV_32FC1);
 
-        int ft_sz = accumulate(ft_vec.begin(), ft_vec.end(), 0, [](int init, const vector<float>& ft) {
-            return init + ft.size();
-        });
-        ft_dst.reserve(ft_sz);
-
-        for (const auto& ft : ft_vec) {
-            ft_dst.insert(ft_dst.end(), ft.begin(), ft.end());
+        int sz = samples.size();
+#pragma omp parallel for
+        for (int i = 0; i < sz; ++i) {
+            float* data = features.ptr<float>(i);
+            vector<float> ft;
+            ex->extract(samples[i], ft);
+            memcpy(data, ft.data(), ft_dim * sizeof(float));
         }
+        cout << "done" << endl;
+
+        // Scale value range to [0, 1]
+        auto minmax_val = minmax_element(features.begin<float>(), features.end<float>());
+        float a = 2.f / (*minmax_val.second - *minmax_val.first);
+        float b = -(*minmax_val.second + *minmax_val.first) /
+                   (*minmax_val.second - *minmax_val.first);
+        features = a*features + b;
+        *scale_ptr++ = a;
+        *scale_ptr++ = b;
+
+        ft_vec.push_back(features);
     }
+    cout << string(50, '-') << endl;
 }

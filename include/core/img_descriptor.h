@@ -33,53 +33,20 @@ public:
     FeatureExtractor(const FeatureExtractor&) = delete;
     FeatureExtractor& operator= (const FeatureExtractor&) = delete;
 
-//     void extract(const vector<cv::Mat>& samples, vector<cv::Mat>& ft_vec);
-//     void extract(const vector<ImageFile>& samples, vector<cv::Mat>& ft_vec);
-
-    template<typename T>
-    void extract(const vector<T>& samples, vector<cv::Mat>& ft_vec);
+    void extract(const cv::Mat& samples, vector<cv::Mat>& ft_vec);
+    void extract(const vector<ImageFile>& sample, vector<cv::Mat>& ft_vec);
 
     void setFeatures(const FeatureFlag& flag);
 
     void setGISTParams(const GISTParams& params);
 
-    // Not used
-    void extract(const cv::Mat& sample, vector<vector<float>>& features);
-
-    void mergeFeature(const vector<vector<vector<float>>>& features_src,
-                             vector<vector<float>>& features_dst);
+    cv::Mat& getScaleFactors() { return scale_mat; }
+    void setScaleFacotrs(const cv::Mat& scale_factors) { scale_mat = scale_factors; }
 
 private:
-    const int GIST_WIDTH  = 256;
-    const int GIST_HEIGHT = 256;
-
-    int w = GIST_WIDTH;
-    int h = GIST_HEIGHT;
-
     vector<ImgFeature::Ptr> feature_extractors;
+    cv::Mat scale_mat;
 };
-
-template<typename T>
-void FeatureExtractor::extract(const vector<T>& samples, vector<cv::Mat>& ft_vec)
-{
-    int ft_id = 0;
-    for (const auto& ex : feature_extractors) {
-        cout << "Extracting feature " << ++ft_id << endl;
-
-        int ft_dim = ex->size();
-        cv::Mat features(samples.size(), ft_dim, CV_32FC1);
-
-        int sz = samples.size();
-#pragma omp parallel for
-        for (int i = 0; i < sz; ++i) {
-            float* data = features.ptr<float>(i);
-            vector<float> ft;
-            ex->extract(samples[i], ft);
-            memcpy(data, ft.data(), ft_dim * sizeof(float));
-        }
-        ft_vec.push_back(features);
-    }
-}
 _CLANY_END
 
 #endif // IMG_DESCRIPTOR_H
