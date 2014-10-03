@@ -1,3 +1,27 @@
+﻿/////////////////////////////////////////////////////////////////////////////////
+// The MIT License(MIT)
+// 
+// Copyright (c) 2014 Tiangang Song
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files(the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and / or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions :
+// 
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+/////////////////////////////////////////////////////////////////////////////////
+
 #ifndef CLANY_TIMER_HPP
 #define CLANY_TIMER_HPP
 
@@ -23,7 +47,7 @@ _CLANY_BEGIN
 class ScopeTimer
 {
 public:
-    ScopeTimer(int precision = 3) :timer_ (CLOCK()), precision_ (precision) {}
+    explicit ScopeTimer(int precision = 3) :timer_ (CLOCK()), precision_ (precision) {}
 
     ~ScopeTimer()
     {
@@ -42,7 +66,7 @@ private:
 class CPUTimer
 {
 public:
-    CPUTimer(bool is_started = true) :
+    explicit CPUTimer(bool is_started = true) :
         timer_(0), duration_berfore_(0), is_stopped_(false)
     {
         if (is_started) {
@@ -50,7 +74,7 @@ public:
         }
     }
 
-    double elapsed(int precision = 3, string process_name = "Since begin")
+    double elapsed(string process_name = "Since begin", int precision = 3)
     {
         if (is_stopped_) {
             cout << "Paused" << endl;
@@ -68,7 +92,7 @@ public:
         return since_begin;
     }
     
-    double delta(int precision = 3, string process_name = "Since last check")
+    double delta(string process_name = "Since last check", int precision = 3)
     {
         if (is_stopped_) {
             cout << "Paused" << endl;
