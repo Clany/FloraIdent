@@ -1,7 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include "flora_ident_config.h"
+#include "obj_ident_config.h"
 #if USE_QT_VER >= 5
   #include <QtWidgets/QWidget>
 #else
@@ -24,7 +24,7 @@ private:
     void showCandidates();
     void resetCandButton();
     void restoreLastSelection();
-    void getUserResponses(std::array<int, clany::CANDIDATES_SIZE>& resp);
+    void getUserResponses(std::array<int, cls::CANDIDATES_SIZE>& resp);
 
 private slots:
     void on_learningRateSlider_sliderMoved(int value);
@@ -48,9 +48,9 @@ private slots:
 private:
     Ui::MainWindowClass ui;
 
-    clany::FloraIdentApp flora_app;
-    std::array<QImage, clany::CANDIDATES_SIZE> candidates;
-    std::array<int, clany::CANDIDATES_SIZE> last_selection;
+    cls::FloraIdentApp flora_app;
+    std::array<QImage, cls::CANDIDATES_SIZE> candidates;
+    std::array<int, cls::CANDIDATES_SIZE> last_selection;
 };
 
 #endif // MAINWINDOW_H

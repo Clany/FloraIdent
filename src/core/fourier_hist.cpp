@@ -2,7 +2,7 @@
 
 using namespace std;
 using namespace cv;
-using namespace clany;
+using namespace cls;
 
 
 void FourierHist::getFeature(const Mat& src, vector<float>& hist)

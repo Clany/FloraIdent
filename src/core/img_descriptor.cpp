@@ -3,7 +3,7 @@
 
 using namespace std;
 using namespace cv;
-using namespace clany;
+using namespace cls;
 
 
 FeatureExtractor::FeatureExtractor()

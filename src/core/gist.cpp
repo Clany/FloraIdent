@@ -4,7 +4,7 @@
 
 using namespace std;
 using namespace cv;
-using namespace clany;
+using namespace cls;
 
 namespace {
 using DescPtr     = unique_ptr<float, void(*)(void*)>;

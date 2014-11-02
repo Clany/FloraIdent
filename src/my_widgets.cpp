@@ -6,7 +6,7 @@
 #include "my_widgets.h"
 
 using namespace std;
-using namespace clany;
+using namespace cls;
 
 //////////////////////////////////////////////////////////////////////////
 // Selection area

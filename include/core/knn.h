@@ -19,11 +19,17 @@ public:
                const cv::Mat& sampleIdx = cv::Mat(), bool isRegression = false,
                int maxK = 32, bool updateBase = false) override;
 
-    int predict(const cv::Mat& sample, int k, cv::OutputArray neighbor_idx = cv::noArray(),
-                cv::OutputArray neighbor_resp = cv::noArray(), cv::OutputArray dist = cv::noArray());
+    int predict(const cv::Mat& sample, int k,
+                cv::OutputArray neighbor_idx = cv::noArray(),
+                cv::OutputArray neighbor_resp = cv::noArray(),
+                cv::OutputArray dist = cv::noArray());
 
     int predict(const cv::Mat& sample, int k, cv::OutputArray neighbor_idx,
                 DistFunc dist_func = &KNN::euclideanDist);
+
+    void predict(const cv::Mat& sample, int k, vector<int>& guesses,
+                 int expected_guess_num, cv::OutputArray neighbor_idx,
+                 DistFunc dist_func = &KNN::euclideanDist);
 
     static double euclideanDist(cv::InputArray a1, cv::InputArray a2);
 
@@ -31,7 +37,6 @@ private:
     cv::Mat train_data;
     cv::Mat labels;
 };
-
 } // End namespace ml
 _CLANY_END
 

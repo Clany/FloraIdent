@@ -3,7 +3,7 @@
 
 using namespace std;
 using namespace cv;
-using namespace clany;
+using namespace cls;
 
 
 void FloraIdentApp::setSettings(const FloraIdentSettings& settings)
@@ -46,7 +46,7 @@ void FloraIdentApp::setSelectionRegion(int x, int y, int width, int height)
     flora_ident.setTestImg(query_img(Rect(x, y, width, height)));
 }
 
-void clany::FloraIdentApp::setSelectionRegion(const QRect& rect)
+void FloraIdentApp::setSelectionRegion(const QRect& rect)
 {
     setSelectionRegion(rect.left(), rect.top(), rect.width(), rect.height());
 }

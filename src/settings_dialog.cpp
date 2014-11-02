@@ -5,7 +5,7 @@
 #include "flora_ident_app.h"
 
 using namespace std;
-using namespace clany;
+using namespace cls;
 
 
 SettingsDialog::SettingsDialog(QWidget* parent, Qt::WindowFlags flag)
@@ -99,7 +99,7 @@ bool SettingsDialog::parseOrientaion(vector<int>& orients)
             orients.push_back(stoi(tmp));   // May throw
         }
 
-        if (orients.size() != ui.GISTScaleSpinBox->value()) {
+        if (orients.size() != (size_t)ui.GISTScaleSpinBox->value()) {
             throw logic_error("Invalid orienations!");
         }
     } catch (const logic_error& err) {

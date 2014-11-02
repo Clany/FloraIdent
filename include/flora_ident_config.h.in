@@ -1,4 +1,0 @@
-#define FloraIdent_VERSION_MAJOR @FloraIdent_VERSION_MAJOR@
-#define FloraIdent_VERSION_MINOR @FloraIdent_VERSION_MINOR@
-
-#define USE_QT_VER @USE_QT_VER@

@@ -1,3 +1,4 @@
+#include <iomanip>
 #include <random>
 #include <cmath>
 #include <QDir>
@@ -10,14 +11,11 @@
 
 using namespace std;
 using namespace cv;
-using namespace clany;
+using namespace cls;
 using namespace Eigen;
 
 namespace  {
-    constexpr float EPSF = numeric_limits<float>::epsilon();
-    constexpr double EPSD = numeric_limits<double>::epsilon();
-    constexpr float MAX_FLOAT = numeric_limits<float>::max();
-    constexpr double MAX_DOUBLE = numeric_limits<double>::max();
+    constexpr int MAX_INT   = numeric_limits<int>::max();
 } // Unnamed namespace
 
 
@@ -181,7 +179,7 @@ void FloraIdent::updateCandidates(const UserResponse& user_resp, int lambda)
     }
 
     // Random shuffle all the pairs and update distance matrix until converge
-    int min_err_count = numeric_limits<int>::max();
+    int min_err_count = MAX_INT;
     int iter_count = 0;
     vector<int> cands(CANDIDATES_SIZE);
     iota(cands.begin(), cands.end(), 0);
@@ -192,15 +190,18 @@ void FloraIdent::updateCandidates(const UserResponse& user_resp, int lambda)
         for (int i = 0; i < CANDIDATES_SIZE; ++i) {
             int idx = cands[i];
             if (user_resp[idx]) {
-                err_count += updateDistMat(test_ft, 1, train_fts.row(cand_idx[idx]), user_resp[idx], lambda);
+                err_count += updateDistMat(test_ft, 1, train_fts.row(cand_idx[idx]),
+                                           user_resp[idx], lambda);
             }
         }
 
         // Update based on cand-cand pairs
         shuffle(pairs.begin(), pairs.end(), default_random_engine(RAND_SEED));
         for (const auto& pair : pairs) {
-            err_count += updateDistMat(train_fts.row(cand_idx[pair.first]), user_resp[pair.first],
-                                       train_fts.row(cand_idx[pair.second]), user_resp[pair.second]);
+            err_count += updateDistMat(train_fts.row(cand_idx[pair.first]),
+                                       user_resp[pair.first],
+                                       train_fts.row(cand_idx[pair.second]),
+                                       user_resp[pair.second]);
         }
 #ifndef NDEBUG
         cout << err_count << endl;
@@ -227,7 +228,8 @@ string FloraIdent::predict()
 
     vector<int> neighbors;
     Mat A = dist_mat;
-    int idx = cvRound(classifier.predict(test_ft, 10, neighbors, [&A](InputArray _a1, InputArray _a2) {
+    int idx = cvRound(classifier.predict(test_ft, 10, neighbors,
+        [&A](InputArray _a1, InputArray _a2) {
         Mat a1 = _a1.getMat();
         Mat a2 = _a2.getMat();
 
@@ -266,20 +268,23 @@ void FloraIdent::initDistMat()
 
     // Random shuffle all the pairs and update distance matrix until
     // error count is less than 5%
-    int min_err_count = numeric_limits<int>::max();
+    int min_err_count = MAX_INT;
     while (true) {
         shuffle(pairs.begin(), pairs.end(), default_random_engine(RAND_SEED));
         int err_count = 0;
         CPUTimer timer;
         for (const auto& pair : pairs) {
-            err_count += updateDistMat(train_fts.row(pair.first), train_set.labels[pair.first],
-                                       train_fts.row(pair.second), train_set.labels[pair.second], 0.1);
+            err_count += updateDistMat(train_fts.row(pair.first),
+                                       train_set.labels[pair.first],
+                                       train_fts.row(pair.second),
+                                       train_set.labels[pair.second], 0.1);
         }
-        timer.delta(3, "Elapsed time");
+        timer.delta("Elapsed time");
         float ratio = static_cast<float>(err_count) / pair_sz;
 
         cout.setf(ios::left);
-        cout << "Error count: " << setw(9) << err_count << ratio * 100 << "%" << endl;
+        cout << "Error count: " << setw(9) << err_count
+             << ratio * 100 << "%" << endl;
         if (err_count < min_err_count) {
             min_err_count = err_count;
             A = dist_mat.clone();
@@ -291,7 +296,8 @@ void FloraIdent::initDistMat()
 
     Mat eigen_vals;
     eigen(dist_mat, eigen_vals);
-    while (any_of(eigen_vals.begin<double>(), eigen_vals.end<double>(), [](double val) {
+    while (any_of(eigen_vals.begin<double>(), eigen_vals.end<double>(),
+        [](double val) {
         return val < 0;
     })) {
         nearestSPD(dist_mat, dist_mat);
@@ -299,7 +305,8 @@ void FloraIdent::initDistMat()
     }
 }
 
-int FloraIdent::updateDistMat(const Mat& x1, int y1, const Mat& x2, int y2, double lambda)
+int FloraIdent::updateDistMat(const Mat& x1, int y1,
+                              const Mat& x2, int y2, double lambda)
 {
     Mat A = dist_mat;
     int yt = y1 == y2 ? 1 : -1;
@@ -349,7 +356,8 @@ void FloraIdent::nearestSPD(const Mat& src, Mat& dst)
     int i = 1;
     while (!CholeskyDecomp(A, L)) {
         double min_eig = A.eigenvalues().real().minCoeff();
-        A += (eps(min_eig) - min_eig * i * i) * MatrixXd::Identity(A.rows(), A.cols());
+        A += (eps(min_eig) - min_eig * i * i) *
+             MatrixXd::Identity(A.rows(), A.cols());
         ++i;
     }
     eigen2cv(A, dst);

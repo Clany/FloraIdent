@@ -1,18 +1,18 @@
 ﻿/////////////////////////////////////////////////////////////////////////////////
 // The MIT License(MIT)
-// 
+//
 // Copyright (c) 2014 Tiangang Song
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files(the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and / or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions :
-// 
+//
 // The above copyright notice and this permission notice shall be included in all
 // copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
@@ -22,9 +22,11 @@
 // SOFTWARE.
 /////////////////////////////////////////////////////////////////////////////////
 
-#ifndef CLANY_FILE_HANDLE_HPP
-#define CLANY_FILE_HANDLE_HPP
+#ifndef CLS_FILE_HANDLE_HPP
+#define CLS_FILE_HANDLE_HPP
 
+#include <iostream>
+#include <vector>
 #include <fstream>
 #include <sstream>
 #include <string>
@@ -43,42 +45,80 @@
 _CLANY_BEGIN
 typedef istreambuf_iterator<char> ifsbuf_iter;
 
+#if CLS_HAS_EXCEPT
 class FileExcept :public runtime_error
 {
 public:
     FileExcept(const string& err_msg) :runtime_error(err_msg) {};
 };
+#endif
 
 
 inline string readFile(const string& file_name)
 {
-    ifstream ifs(file_name, ios::binary);
+    ifstream ifs(file_name);
     if (!ifs.is_open()) {
+#if CLS_HAS_EXCEPT
         throw FileExcept("Could not open file " + file_name);
+#else
+        cerr << "Fail to open the file" << endl;
+        return string("");
+#endif
     }
 
     return string(ifsbuf_iter(ifs), ifsbuf_iter());
+}
+
+inline vector<char> readBinaryFile(const string& file_name)
+{
+    ifstream ifs(file_name, ios::binary);
+    if (!ifs) {
+#if CLS_HAS_EXCEPT
+        throw FileExcept("Could not open file " + file_name);
+#else
+        cerr << "Fail to open the file" << endl;
+        return vector<char>();
+#endif
+    }
+
+    return vector<char>(ifsbuf_iter(ifs), ifsbuf_iter());
 }
 
 
 inline ifstream& gotoLine(ifstream& file, int num)
 {
     file.seekg(ios::beg);
-    for (int i = 0; i < num; ++i) {
+    for (int i = 0; i < num-1; ++i) {
         file.ignore(numeric_limits<streamsize>::max(), '\n');
     }
     return file;
 }
 
 
-inline string getLineStr(ifstream& file, int num)
+inline string getLineStr(ifstream& ifs, int num)
 {
-    gotoLine(file, num);
+    gotoLine(ifs, num);
 
     string curr_line;
-    getline(file, curr_line);
+    getline(ifs, curr_line);
 
     return curr_line;
+}
+
+
+inline string getLineStr(const string& file_name, int num)
+{
+    ifstream ifs(file_name);
+    if (!ifs) {
+#if CLS_HAS_EXCEPT
+        throw FileExcept("Could not open file " + file_name);
+#else
+        cerr << "Fail to open the file" << endl;
+        return string("");
+#endif
+    }
+
+    return getLineStr(ifs, num);
 }
 
 
@@ -96,4 +136,4 @@ inline int countLine(const string& file_name)
 }
 _CLANY_END
 
-#endif // CLANY_FILE_HANDLE_HPP
+#endif // CLS_FILE_HANDLE_HPP

@@ -2,7 +2,7 @@
 #include "core/svm.h"
 
 using namespace std;
-using namespace clany;
+using namespace cls;
 using namespace ml;
 using cv::Mat;
 using cv::InputArray;

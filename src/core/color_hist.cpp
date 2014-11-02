@@ -3,7 +3,7 @@
 using namespace std;
 using namespace placeholders;
 using namespace cv;
-using namespace clany;
+using namespace cls;
 
 
 void LaplRGB::getFeature(const Mat& src, vector<float>& hist)

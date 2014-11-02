@@ -6,7 +6,7 @@
 #include "flora_ident_app.h"
 
 using namespace std;
-using namespace clany;
+using namespace cls;
 
 MainWindow::MainWindow(QWidget *parent)
     : QWidget(parent)

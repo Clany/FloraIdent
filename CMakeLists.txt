@@ -1,5 +1,5 @@
 cmake_minimum_required (VERSION 2.8.11)
-project(FloraIdent)
+project(ObjIdent)
 
 list(APPEND CMAKE_MODULE_PATH
   ${PROJECT_SOURCE_DIR}/cmake
@@ -59,10 +59,11 @@ include_directories(${EIGEN3_INCLUDE_DIR})
 
 find_package(TBB REQUIRED)
 include_directories(${TBB_INCLUDE_DIRS})
+link_directories(${TBB_LIBRARY_DIRS})
 
 configure_file (
-  "${PROJECT_SOURCE_DIR}/include/flora_ident_config.h.in"
-  "${PROJECT_BINARY_DIR}/flora_ident_config.h"
+  "${PROJECT_SOURCE_DIR}/include/obj_ident_config.h.in"
+  "${PROJECT_BINARY_DIR}/obj_ident_config.h"
 )
 
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR})

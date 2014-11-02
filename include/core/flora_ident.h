@@ -36,6 +36,8 @@ public:
     void clearFeatures();
 
 private:
+    enum class STATUS { INITIAL, FINAL };
+
     void initDistMat();
     int updateDistMat(const cv::Mat& x1, int y1, const cv::Mat& x2, int y2, double lambda = 1);
     void nearestSPD(const cv::Mat& src, cv::Mat& dst);

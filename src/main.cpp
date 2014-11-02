@@ -1,4 +1,4 @@
-#include "flora_ident_config.h"
+#include "obj_ident_config.h"
 #if USE_QT_VER >= 5
  #include <QtWidgets/QApplication>
 #else
@@ -9,7 +9,7 @@
 
 using namespace std;
 using namespace cv;
-using namespace clany;
+using namespace cls;
 
 int main(int argc, char *argv[])
 {

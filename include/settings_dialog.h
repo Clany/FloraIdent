@@ -1,7 +1,7 @@
 #ifndef SETTINGS_DIALOG_H
 #define SETTINGS_DIALOG_H
 
-#include "flora_ident_config.h"
+#include "obj_ident_config.h"
 #if USE_QT_VER >= 5
 #include <QtWidgets/QWidget>
 #else
@@ -18,10 +18,10 @@ public:
     SettingsDialog(QWidget* parent = 0, Qt::WindowFlags f = 0);
 
     SettingsDialog(QWidget* parent, Qt::WindowFlags f,
-                   const clany::FloraIdentSettings& settings);
+                   const cls::FloraIdentSettings& settings);
 
-    void init(const clany::FloraIdentSettings& settings);
-    clany::FloraIdentSettings getSettings();
+    void init(const cls::FloraIdentSettings& settings);
+    cls::FloraIdentSettings getSettings();
 
 public slots:
     void accept() override;
@@ -31,7 +31,7 @@ private:
     void parseOrientaion(const std::vector<int>& orients, std::string& orient_str);
 
     Ui::SettingsDialogClass ui;
-    clany::FloraIdentSettings settings;
+    cls::FloraIdentSettings settings;
 };
 
 #endif // SETTINGS_DIALOG_H
