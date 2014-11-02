@@ -5,11 +5,13 @@
 #include <array>
 #include <string>
 #include <iostream>
+#include <iomanip>
 #include <memory>
 #include <algorithm>
 #include <functional>
 #include <numeric>
 #include <chrono>
+#include <random>
 #include <opencv2/opencv.hpp>
 #include "clany/clany_defs.h"
 
@@ -18,7 +20,8 @@
 #endif
 
 _CLANY_BEGIN
-const llong RAND_SEED = chrono::system_clock::now().time_since_epoch().count();
+const uint  SEED = random_device()();
+static auto rand_engine = default_random_engine(SEED);
 _CLANY_END
 
 #endif // COMMON_H

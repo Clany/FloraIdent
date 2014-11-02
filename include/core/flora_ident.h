@@ -38,17 +38,6 @@ public:
 private:
     enum class STATUS { INITIAL, FINAL };
 
-    void initDistMat();
-    int updateDistMat(const cv::Mat& x1, int y1, const cv::Mat& x2, int y2, double lambda = 1);
-    void nearestSPD(const cv::Mat& src, cv::Mat& dst);
-
-    template<typename T>
-    typename enable_if<is_floating_point<T>::value, T>::type
-    eps(T val)
-    {
-        return nextafter(val, numeric_limits<T>::max()) - val;
-    };
-
     FeatureExtractor ft_extor;
 
     // Train image set
