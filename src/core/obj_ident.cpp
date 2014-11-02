@@ -1,7 +1,8 @@
 #include <QDir>
 #include <QDirIterator>
+#include "clany/algorithm.hpp"
 #include "core/dist_learning.h"
-#include "core/flora_ident.h"
+#include "core/obj_ident.h"
 
 using namespace std;
 using namespace cv;
@@ -174,7 +175,7 @@ void FloraIdent::updateCandidates(const UserResponse& user_resp, int lambda)
     for (;;) {
         int err_count = 0;
         // Update according to test-cand pairs
-        shuffle(cands.begin(), cands.end(), rand_engine);
+        shuffle(cands, rand_engine);
         for (int i = 0; i < CANDIDATES_SIZE; ++i) {
             int idx = cands[i];
             if (user_resp[idx]) {
@@ -185,7 +186,7 @@ void FloraIdent::updateCandidates(const UserResponse& user_resp, int lambda)
         }
 
         // Update based on cand-cand pairs
-        shuffle(pairs.begin(), pairs.end(), rand_engine);
+        shuffle(pairs, rand_engine);
         for (const auto& pair : pairs) {
             err_count += updateDistMat(dist_mat,
                                        train_fts.row(cand_idx[pair.first]),

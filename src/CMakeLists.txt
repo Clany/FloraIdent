@@ -3,7 +3,7 @@ set(SRC_LIST
   mainwindow.cpp
   settings_dialog.cpp
   my_widgets.cpp
-  flora_ident_app.cpp
+  obj_ident_app.cpp
   core/color_hist.cpp
   core/fourier_hist.cpp
   core/hough_hist.cpp
@@ -11,7 +11,8 @@ set(SRC_LIST
   core/gist.cpp
   core/svm.cpp
   core/knn.cpp
-  core/flora_ident.cpp
+  core/dist_learning.cpp
+  core/obj_ident.cpp
   ../3rdparty/src/libsvm.cpp
   ../3rdparty/src/libgist.cpp
   ../3rdparty/src/standalone_image.cpp
@@ -21,7 +22,7 @@ set(HEADER_LIST
   ../include/mainwindow.h
   ../include/settings_dialog.h
   ../include/my_widgets.h
-  ../include/flora_ident_app.h
+  ../include/obj_ident_app.h
   ../include/common.h
   ../include/core/img_feature.h
   ../include/core/color_hist.h
@@ -31,7 +32,8 @@ set(HEADER_LIST
   ../include/core/gist.h
   ../include/core/svm.h  
   ../include/core/knn.h
-  ../include/core/flora_ident.h
+  ../include/core/dist_learning.h
+  ../include/core/obj_ident.h
 )
 
 WRAP_UI_FILE(HEADER_UI

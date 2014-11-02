@@ -2,7 +2,6 @@
 #include <QMessageBox>
 
 #include "settings_dialog.h"
-#include "flora_ident_app.h"
 
 using namespace std;
 using namespace cls;

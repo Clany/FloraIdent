@@ -1,5 +1,5 @@
-#ifndef FLORA_IDENT_H
-#define FLORA_IDENT_H
+#ifndef OBJ_IDENT_H
+#define OBJ_IDENT_H
 
 #include "common.h"
 #include "core/img_descriptor.h"
@@ -38,6 +38,7 @@ public:
 private:
     enum class STATUS { INITIAL, FINAL };
 
+    STATUS update_status = STATUS::INITIAL;
     FeatureExtractor ft_extor;
 
     // Train image set
@@ -58,4 +59,4 @@ private:
 };
 _CLANY_END
 
-#endif // FLORA_IDENT_H
+#endif // OBJ_IDENT_H

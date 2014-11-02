@@ -1,5 +1,5 @@
 #include <QDir>
-#include "flora_ident_app.h"
+#include "obj_ident_app.h"
 
 using namespace std;
 using namespace cv;

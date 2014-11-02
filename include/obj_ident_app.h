@@ -1,10 +1,10 @@
-#ifndef FLORA_IDENT_APP_H
-#define FLORA_IDENT_APP_H
+#ifndef OBJ_IDENT_APP_H
+#define OBJ_IDENT_APP_H
 
 #include <QImage>
 #include <QRect>
 #include "common.h"
-#include "core/flora_ident.h"
+#include "core/obj_ident.h"
 #include "clany/traits.hpp"
 
 _CLANY_BEGIN
@@ -64,4 +64,4 @@ private:
 };
 _CLANY_END
 
-#endif // FLORA_IDENT_APP_H
+#endif // OBJ_IDENT_APP_H

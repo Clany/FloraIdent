@@ -1,3 +1,4 @@
+#include "clany/algorithm.hpp"
 #include "clany/timer.hpp"
 #include "clany/eigen.hpp"
 #include "Eigen/Sparse"
@@ -29,7 +30,7 @@ void cls::initDistMat(Mat& dist_mat, const Mat& train_fts, const vector<int>& la
     // error count is less than 5%
     int min_err_count = INT32_MAX;
     while (true) {
-        shuffle(pairs.begin(), pairs.end(), rand_engine);
+        shuffle(pairs, rand_engine);
         int err_count = 0;
         CPUTimer timer;
         for (const auto& pair : pairs) {
@@ -65,7 +66,8 @@ void cls::initDistMat(Mat& dist_mat, const Mat& train_fts, const vector<int>& la
     }
 }
 
-int cls::updateDistMat(Mat& dist_mat, const Mat& x1, int y1, const Mat& x2, int y2, double lambda)
+int cls::updateDistMat(Mat& dist_mat, const Mat& x1, int y1,
+                       const Mat& x2, int y2, double lambda)
 {
     Mat& A = dist_mat;
     int yt = y1 == y2 ? 1 : -1;

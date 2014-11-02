@@ -8,7 +8,7 @@
 #include <QtGui/QWidget>
 #endif
 #include "ui_settings_dialog.h"
-#include "flora_ident_app.h"
+#include "obj_ident_app.h"
 #include "common.h"
 
 class SettingsDialog : public QDialog {

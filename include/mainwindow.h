@@ -8,7 +8,7 @@
   #include <QtGui/QWidget>
 #endif
 #include "ui_mainwindow.h"
-#include "flora_ident_app.h"
+#include "obj_ident_app.h"
 
 class MainWindow : public QWidget
 {
