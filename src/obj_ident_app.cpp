@@ -28,7 +28,7 @@ bool FloraIdentApp::loadDataset(const string& dir_name)
         auto files = curr_dir.entryList(QDir::Files);
 
         bool has_train_fts = false;
-        if (files.contains("train_features.xml") && files.contains("svm_set_0")) {
+        if (files.contains("train_features.xml") && files.contains("svm_model")) {
             has_train_fts = true;
         }
         return flora_ident.loadTrainSet(dir_name, has_train_fts);
@@ -73,7 +73,7 @@ void FloraIdentApp::getCandidates(array<QImage, CANDIDATES_SIZE>& cands)
 
 string FloraIdentApp::getResult()
 {
-    return flora_ident.predict();
+    return flora_ident.getResult();
 }
 
 void FloraIdentApp::matToQImage(const Mat& src, QImage& dst)

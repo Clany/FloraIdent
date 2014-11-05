@@ -15,6 +15,7 @@ using UserResponse = array<int, CANDIDATES_SIZE>;
 
 class ImageFile {
 public:
+    ImageFile() = default;
     explicit ImageFile(const string& file_name) : fn(file_name) {}
 
     operator cv::Mat() const { return cv::imread(fn); }

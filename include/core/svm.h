@@ -43,6 +43,8 @@ public:
     double predict(cv::InputArray sample, vector<double>& vals, bool return_prob_val = false) const;
     double predict(const SVMNode& sample, double* vals, bool return_prob_val = false) const;
 
+    bool isReady() { return static_cast<bool>(model_ptr); }
+
     void writeModel(const string& file_name) const;
     void readModel(const string& file_name);
 

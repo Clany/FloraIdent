@@ -19,21 +19,21 @@ FeatureExtractor::FeatureExtractor()
 //     /*feature_extractors.push_back(make_shared<ProbRGB>());*/
 // #endif
     feature_extractors.push_back(make_shared<GIST>());
-    feature_extractors.push_back(make_shared<LaplRGB>());
-    feature_extractors.push_back(make_shared<HSVHist>());
-    feature_extractors.push_back(make_shared<FourierHist>());
-    feature_extractors.push_back(make_shared<HoughHist>());
+//     feature_extractors.push_back(make_shared<LaplRGB>());
+//     feature_extractors.push_back(make_shared<HSVHist>());
+//     feature_extractors.push_back(make_shared<FourierHist>());
+//     feature_extractors.push_back(make_shared<HoughHist>());
 }
 
 
 void FeatureExtractor::setFeatures(const FeatureFlag& flag)
 {
     feature_extractors.clear();
-    if (flag & FeatureFlag::GIST_DESC)    feature_extractors.push_back(make_shared<GIST>());
-    if (flag & FeatureFlag::LAPL_RGB)     feature_extractors.push_back(make_shared<LaplRGB>());
-    if (flag & FeatureFlag::HSV_HIST)     feature_extractors.push_back(make_shared<HSVHist>());
-    if (flag & FeatureFlag::FOURIER_HIST) feature_extractors.push_back(make_shared<FourierHist>());
-    if (flag & FeatureFlag::HOUGH_HIST)   feature_extractors.push_back(make_shared<HoughHist>());
+    if (flag & GIST_DESC)    feature_extractors.push_back(make_shared<GIST>());
+    if (flag & LAPL_RGB)     feature_extractors.push_back(make_shared<LaplRGB>());
+    if (flag & HSV_HIST)     feature_extractors.push_back(make_shared<HSVHist>());
+    if (flag & FOURIER_HIST) feature_extractors.push_back(make_shared<FourierHist>());
+    if (flag & HOUGH_HIST)   feature_extractors.push_back(make_shared<HoughHist>());
 }
 
 
