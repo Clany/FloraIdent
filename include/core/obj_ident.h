@@ -61,7 +61,7 @@ public:
     void clearFeatures();
 
 private:
-    enum class STATUS { INITIAL, UPDATE, FINAL };
+    enum class STATUS { INITIAL, UPDATE, FINAL, COMPLETE };
 
     STATUS update_status = STATUS::INITIAL;
     FeatureExtractor ft_extor;
