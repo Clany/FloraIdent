@@ -85,13 +85,6 @@
 #endif
 
 // Exception macros
-#  undef NOEXCEPT
-#if !(__cplusplus >= 201103L)
-#  define NOEXCEPT throw()
-#else
-#  define NOEXCEPT noexcept
-#endif
-
 #ifndef CLS_HAS_EXCEPT
 #  define CLS_HAS_EXCEPT 1
 #endif
@@ -115,6 +108,9 @@
 #  define TRY_BEGIN {
 #  define TRY_END   }
 #  define CATCH_END
+
+#  define THROW(x)  ((void)0)
+#  define RETHROW
 #endif
 
 // Some useful typedef
@@ -131,7 +127,7 @@ using llong  = long long;
 #define CLANG_VERSION (__clang_major__ * 100 +\
                        __clang_minor__)
 #define CPP11_SUPPORT (GCC_VERSION >= 408 || CLANG_VERSION >= 303 || _MSC_VER >= 1900)
-#define CPP14_SUPPORT (GCC_VERSION >= 409 || CLANG_VERSION >= 304)
+#define CPP14_SUPPORT (GCC_VERSION >= 409 || CLANG_VERSION >= 304 || _MSC_VER >= 1900)
 
 _CLANY_BEGIN
 using namespace std;

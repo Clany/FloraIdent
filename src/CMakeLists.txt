@@ -11,7 +11,7 @@ set(SRC_LIST
   core/gist.cpp
   core/svm.cpp
   core/knn.cpp
-  core/dist_learning.cpp
+#  core/dist_learning.cpp
   core/obj_ident.cpp
   ../3rdparty/src/libsvm.cpp
   ../3rdparty/src/libgist.cpp
@@ -32,7 +32,7 @@ set(HEADER_LIST
   ../include/core/gist.h
   ../include/core/svm.h  
   ../include/core/knn.h
-  ../include/core/dist_learning.h
+#  ../include/core/dist_learning.h
   ../include/core/obj_ident.h
 )
 

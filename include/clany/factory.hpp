@@ -36,23 +36,25 @@ class Factory
 {
 public:
     template<typename... Args>
-    shared_ptr<T> operator() (Args&&... args)
-    { return make_shared<T>(forward<Args>(args)...); };
+    unique_ptr<T> operator()(Args&&... args)
+    {
+        return make_unique<T>(forward<Args>(args)...);
+    };
 };
 
 
 template<typename BaseType, typename IDType = string,
-         typename CreateFunc = shared_ptr<BaseType>()>
+         typename CreateFunc = unique_ptr<BaseType>()>
 class ObjFactory
 {
-private:
-    using BasePtr = shared_ptr<BaseType>;
+public:
     using Creator = function<CreateFunc>;
+    using BasePtr = typename Creator::result_type;
 
 public:
     static bool addType(const IDType& ID, const Creator& creator)
     {
-        auto& creators = instance().creators_;
+        auto& creators = instance().creators_map;
         if (creators.find(ID) == creators.end()) {
             creators.insert({ID, creator});
             return true;
@@ -61,9 +63,15 @@ public:
         return false;
     }
 
+    template<typename T>
+    static bool addType(const IDType& ID)
+    {
+        return addType(ID, Factory<T>());
+    }
+
     static bool removeType(const IDType& ID)
     {
-        auto& creators = instance().creators_;
+        auto& creators = instance().creators_map;
         if (creators.find(ID) != creators.end()) {
             creators.erase(ID);
             return true;
@@ -72,11 +80,10 @@ public:
         return false;
     }
 
-
     template<typename... Args>
     static BasePtr create(const IDType& ID, Args&&... args)
     {
-        auto& creators = instance().creators_;
+        auto& creators = instance().creators_map;
         auto iter = creators.find(ID);
         if (iter != creators.end()) {
             return (iter->second)(forward<Args>(args)...);
@@ -96,7 +103,7 @@ private:
         return obj_factory;
     }
 
-    map<IDType, Creator> creators_;
+    map<IDType, Creator> creators_map;
 };
 _CLANY_END
 
@@ -104,21 +111,19 @@ _CLANY_END
 // Use these macro in *.cpp file
 #define REGISTER_TO_FACTORY(BaseType, DerivedType) \
 namespace { \
-    const bool ADD_##DerivedType = clany::ObjFactory<BaseType>::addType(#DerivedType, clany::Factory<DerivedType>()); \
+    const bool ADD_##DerivedType = cls::ObjFactory<BaseType>::addType<DerivedType>(#DerivedType); \
 }
-
 
 // Have "typedef BaseType base" in derived class
 #define REGISTER_TYPE_TO_FACTORY(DerivedType) \
 namespace { \
-    const bool ADD_##DerivedType = clany::ObjFactory<DerivedType::base>::addType(#DerivedType, clany::Factory<DerivedType>()); \
+    const bool ADD_##DerivedType = cls::ObjFactory<DerivedType::base>::addType<DerivedType>(#DerivedType); \
 }
-
 
 // Custom creator
 #define REGISTER_TO_FACTORY_WITH_CREATOR(BaseType, DerivedType, Creator) \
 namespace { \
-    const bool ADD_##DerivedType = clany::ObjFactory<BaseType, string, Creator>::addType(#DerivedType, clany::Factory<DerivedType>()); \
+    const bool ADD_##DerivedType = cls::ObjFactory<BaseType, string, Creator>::addType<DerivedType>(#DerivedType); \
 }
 
 #endif // CLS_FACTORY_HPP

@@ -234,7 +234,11 @@ template<typename Derived> class MapBase<Derived, WriteAccessors>
       return derived();
     }
 
-    using Base::Base::operator=;
+    using Base_ = typename Base;
+    using Base_::Base::operator=;
+//     typedef Base Base1;
+//     typedef typename Base1::Base Base_MSVC_Workaround;
+//     using Base_MSVC_Workaround::operator=;
 };
 
 #undef EIGEN_STATIC_ASSERT_INDEX_BASED_ACCESS
