@@ -34,21 +34,25 @@ class ImageLabel : public QLabel
 public:
     explicit ImageLabel(QWidget* parent = 0) : QLabel(parent) {};
 
-    void setImage(const QImage& image);
+    void setImage(const QImage& image, const QString& file_name = "");
     bool getSelectionArea(QRect& area, std::string& area_string, bool is_scaled = false);
 
     void clearSelection() { selection_area.reset(nullptr); }
     float getRatio() { return ratio; };
 
+    static bool show_fn;
+
 private:
+    bool event(QEvent *event)               override;
     void mousePressEvent(QMouseEvent* ev)   override;
     void mouseMoveEvent(QMouseEvent* ev)    override;
     void mouseReleaseEvent(QMouseEvent* ev) override;
 
     float ratio;
     QSize org_sz;
-    QImage img;
     QPoint origin;
+    QImage img;
+    QString file_name;
     SelectionArea::Ptr selection_area;
 };
 

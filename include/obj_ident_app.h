@@ -20,6 +20,7 @@ struct FloraIdentSettings
     GISTParams gist_params;
     int learning_rate;
     bool clear_precomp_features;
+    bool display_file_name;
 };
 
 class FloraIdentApp {
@@ -36,7 +37,8 @@ public:
     void extractFeatures();
     void updateCandidates(const UserResponse& user_resp);
 
-    void getCandidates(array<QImage, CANDIDATES_SIZE>& cands);
+    void getCandidates(array<QImage, CANDIDATES_SIZE>& cands,
+                       array<QString, CANDIDATES_SIZE>& cand_fns);
     string getResult();
 
 private:
@@ -61,6 +63,7 @@ private:
 
     cv::Mat query_img;
     array<cv::Mat, CANDIDATES_SIZE> candidates;
+    array<string, CANDIDATES_SIZE>  cand_fns;
 };
 _CLANY_END
 

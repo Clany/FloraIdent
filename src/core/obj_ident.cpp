@@ -1,6 +1,5 @@
 #include <QDir>
 #include <QDirIterator>
-#include "core/dist_learning.h"
 #include "core/obj_ident.h"
 
 using namespace std;
@@ -95,11 +94,13 @@ void FloraIdent::setTestImg(const Mat& src)
     curr_result = "";
 }
 
-void FloraIdent::getCandidates(array<Mat, CANDIDATES_SIZE>& candidates)
+void FloraIdent::getCandidates(array<Mat, CANDIDATES_SIZE>& candidates,
+                               array<string, CANDIDATES_SIZE>& cands_fn)
 {
     auto iter = candidates.begin();
     for (auto i = 0; i < CANDIDATES_SIZE; ++i) {
         candidates[i] = train_set.images[cand_idx[i]];
+        cands_fn[i] = train_set.images[cand_idx[i]];
     }
 }
 

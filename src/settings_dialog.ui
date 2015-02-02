@@ -462,6 +462,42 @@
        </item>
       </layout>
      </widget>
+     <widget class="QWidget" name="tab_3">
+      <attribute name="title">
+       <string>Others</string>
+      </attribute>
+      <widget class="QCheckBox" name="DisplayFileNameCheckBox">
+       <property name="geometry">
+        <rect>
+         <x>15</x>
+         <y>22</y>
+         <width>302</width>
+         <height>30</height>
+        </rect>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>30</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>16777215</width>
+         <height>30</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Display file name (a tooltip will be shown)</string>
+       </property>
+       <property name="checked">
+        <bool>false</bool>
+       </property>
+       <property name="tristate">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </widget>
     </widget>
    </item>
    <item>

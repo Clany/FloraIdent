@@ -24,6 +24,8 @@ void SettingsDialog::init(const FloraIdentSettings& init_settings)
 {
     settings = init_settings;
 
+    ui.DisplayFileNameCheckBox->setChecked(settings.display_file_name);
+
     ui.GISTCheckBox->setChecked(settings.used_features[0]);
     ui.LaplRGBCheckBox->setChecked(settings.used_features[1]);
     ui.HSVHistCheckBox->setChecked(settings.used_features[2]);
@@ -44,6 +46,8 @@ void SettingsDialog::init(const FloraIdentSettings& init_settings)
 FloraIdentSettings SettingsDialog::getSettings()
 {
     FloraIdentSettings new_settings;
+
+    new_settings.display_file_name = ui.DisplayFileNameCheckBox->isChecked();
 
     new_settings.used_features[0] = ui.GISTCheckBox->isChecked();
     new_settings.used_features[1] = ui.LaplRGBCheckBox->isChecked();

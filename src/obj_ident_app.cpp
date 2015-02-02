@@ -56,18 +56,28 @@ void FloraIdentApp::extractFeatures()
     flora_ident.genTrainFeatures();
     flora_ident.genTestFeatures();
 
-    flora_ident.getCandidates(candidates);
+    flora_ident.getCandidates(candidates, cand_fns);
 }
 
 void FloraIdentApp::updateCandidates(const UserResponse& user_resp)
 {
     flora_ident.updateCandidates(user_resp, settings.learning_rate);
-    flora_ident.getCandidates(candidates);
+    flora_ident.getCandidates(candidates, cand_fns);
 }
 
-void FloraIdentApp::getCandidates(array<QImage, CANDIDATES_SIZE>& cands)
+void FloraIdentApp::getCandidates(array<QImage,  CANDIDATES_SIZE>& cands,
+                                  array<QString, CANDIDATES_SIZE>& file_names)
 {
     matToQImage(candidates.begin(), candidates.end(), cands.begin());
+
+    if (!settings.display_file_name) return;
+
+    // Save file name if this is enabled
+    auto iter = file_names.begin();
+    for (const auto& fn : cand_fns) {
+        *iter = fn.substr(fn.rfind("/") + 1).c_str();
+        ++iter;
+    }
 }
 
 

@@ -19,6 +19,7 @@ public:
     explicit ImageFile(const string& file_name) : fn(file_name) {}
 
     operator cv::Mat() const { return cv::imread(fn); }
+    operator string()  const { return fn; }
 
 private:
     string fn;

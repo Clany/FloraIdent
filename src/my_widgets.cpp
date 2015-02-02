@@ -2,8 +2,10 @@
 #include <QHBoxLayout>
 #include <QSizeGrip>
 #include <QGroupBox>
+#include <QToolTip>
 #include <iostream>
 #include "my_widgets.h"
+#include "mainwindow.h"
 
 using namespace std;
 using namespace cls;
@@ -63,6 +65,20 @@ void SelectionArea::resizeEvent(QResizeEvent *)
 
 //////////////////////////////////////////////////////////////////////////
 // Image label
+bool ImageLabel::show_fn = false;
+
+bool ImageLabel::event(QEvent *ev)
+{
+    if (ev->type() == QEvent::ToolTip) {
+        QHelpEvent *help_event = static_cast<QHelpEvent *>(ev);
+        if (!file_name.isEmpty() && show_fn) {
+            QToolTip::showText(help_event->globalPos(), file_name);
+            return true;
+        }
+    }
+    return QWidget::event(ev);
+}
+
 void ImageLabel::mousePressEvent(QMouseEvent *ev)
 {
     origin = ev->pos();
@@ -91,8 +107,10 @@ void ImageLabel::mouseReleaseEvent(QMouseEvent*)
     selection_area->addSizeGrip();
 }
 
-void ImageLabel::setImage(const QImage& image)
+void ImageLabel::setImage(const QImage& image, const QString& fn)
 {
+    file_name = fn;
+
     if (org_sz.isEmpty()) org_sz = size();
     setMaximumSize(org_sz);
     resize(org_sz);

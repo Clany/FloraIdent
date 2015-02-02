@@ -38,7 +38,10 @@ MainWindow::MainWindow(QWidget *parent)
 void MainWindow::loadDataset(const QString& dir)
 {
     if (!dir.isEmpty()) {
-        ui.outputPanel->append("Loading dataset...");
+        QDir path(dir);
+        path.cdUp();
+
+        ui.outputPanel->append("Loading dataset: " + path.dirName() + "...");
         ui.outputPanel->repaint();
         if (flora_app.loadDataset(QDir::cleanPath(dir).toStdString())) {
             ui.outputPanel->moveCursor(QTextCursor::End);
@@ -58,12 +61,12 @@ void MainWindow::loadDataset(const QString& dir)
 // Private functions
 void MainWindow::showCandidates()
 {
-    ui.candidateImageLabel_1->setImage(candidates[0]);
-    ui.candidateImageLabel_2->setImage(candidates[1]);
-    ui.candidateImageLabel_3->setImage(candidates[2]);
-    ui.candidateImageLabel_4->setImage(candidates[3]);
-    ui.candidateImageLabel_5->setImage(candidates[4]);
-    ui.candidateImageLabel_6->setImage(candidates[5]);
+    ui.candidateImageLabel_1->setImage(candidates[0], cand_file_names[0]);
+    ui.candidateImageLabel_2->setImage(candidates[1], cand_file_names[1]);
+    ui.candidateImageLabel_3->setImage(candidates[2], cand_file_names[2]);
+    ui.candidateImageLabel_4->setImage(candidates[3], cand_file_names[3]);
+    ui.candidateImageLabel_5->setImage(candidates[4], cand_file_names[4]);
+    ui.candidateImageLabel_6->setImage(candidates[5], cand_file_names[5]);
     ui.horizontalLayout_7->setAlignment(ui.candidateImageLabel_1, Qt::AlignCenter);
     ui.horizontalLayout_7->setAlignment(ui.candidateImageLabel_2, Qt::AlignCenter);
     ui.horizontalLayout_7->setAlignment(ui.candidateImageLabel_3, Qt::AlignCenter);
@@ -147,6 +150,7 @@ void MainWindow::on_settingsButton_clicked()
                           flora_app.getSettings());
     if (QDialog::Accepted == dialog.exec()) {
         flora_app.setSettings(dialog.getSettings());
+        ImageLabel::show_fn = flora_app.getSettings().display_file_name;
     }
 }
 
@@ -195,7 +199,7 @@ void MainWindow::on_generateCandidatesButton_clicked()
     ui.outputPanel->moveCursor(QTextCursor::End);
     ui.outputPanel->insertPlainText("done.");
 
-    flora_app.getCandidates(candidates);
+    flora_app.getCandidates(candidates, cand_file_names);
     showCandidates();
 
     ui.candidateGroup->setEnabled(true);
@@ -210,7 +214,7 @@ void MainWindow::on_updateCandidatesButton_clicked()
     getUserResponses(last_selection);
 
     flora_app.updateCandidates(last_selection);
-    flora_app.getCandidates(candidates);
+    flora_app.getCandidates(candidates, cand_file_names);
     showCandidates();
     resetCandButton();
 }

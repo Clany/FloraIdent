@@ -28,7 +28,7 @@
 #include <map>
 #include <memory>
 #include <functional>
-#include "clany_defs.h"
+#include "cls_defs.h"
 
 _CLANY_BEGIN
 template<typename T>

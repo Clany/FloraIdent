@@ -28,7 +28,7 @@
 #include <chrono>
 #include <mutex>
 #include <cstdio>
-#include "clany_defs.h"
+#include "cls_defs.h"
 
 
 _CLANY_BEGIN

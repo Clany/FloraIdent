@@ -40,7 +40,7 @@
 #  include <dirent.h>
 #endif
 
-#include "clany_defs.h"
+#include "cls_defs.h"
 
 _CLANY_BEGIN
 typedef istreambuf_iterator<char> ifsbuf_iter;

@@ -50,6 +50,7 @@ private:
 
     cls::FloraIdentApp flora_app;
     std::array<QImage, cls::CANDIDATES_SIZE> candidates;
+    std::array<QString, cls::CANDIDATES_SIZE> cand_file_names;
     std::array<int, cls::CANDIDATES_SIZE> last_selection;
 };
 

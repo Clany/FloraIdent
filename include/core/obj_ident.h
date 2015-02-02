@@ -49,7 +49,8 @@ public:
 
     bool loadTrainSet(const string& dir, bool has_precompute_fts = false);
     void setTestImg(const cv::Mat& src);
-    void getCandidates(array<cv::Mat, CANDIDATES_SIZE>& candidates);
+    void getCandidates(array<cv::Mat, CANDIDATES_SIZE>& candidates,
+                       array<string, CANDIDATES_SIZE>& cands_fn);
     auto getResult() -> string { return curr_result; };
 
     void genTrainFeatures();
