@@ -1,5 +1,6 @@
 #include <QFileDialog>
 #include <QButtonGroup>
+#include <QFileInfo>
 #include "mainwindow.h"
 #include "my_widgets.h"
 #include "settings_dialog.h"
@@ -167,6 +168,8 @@ void MainWindow::on_loadImageButton_clicked()
     if (!fn.isEmpty()) {
         flora_app.loadQueryImg(fn.toStdString());
 
+        QFileInfo file_info(fn);
+        ui.outputPanel->append("Input image loaded: " + file_info.fileName());
         ui.queryImageLabel->setImage(QImage(fn));
         ui.queryGroup->layout()->setAlignment(ui.queryImageLabel, Qt::AlignCenter);
         ui.queryImageLabel->clearSelection();
