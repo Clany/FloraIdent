@@ -3,7 +3,7 @@
 
 #include <memory>
 #include <opencv2/ml/ml.hpp>
-#include "clany/clany_defs.h"
+#include "clany/cls_defs.h"
 
 #define _DENSE_REP
 #include "libsvm.h"

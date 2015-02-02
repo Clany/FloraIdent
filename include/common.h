@@ -13,7 +13,7 @@
 #include <chrono>
 #include <random>
 #include <opencv2/opencv.hpp>
-#include "clany/clany_defs.h"
+#include "clany/cls_defs.h"
 
 #if defined _MSC_VER && _MSC_VER <= 1800
 #  define constexpr const
