@@ -4,6 +4,7 @@
 #include <memory>
 #include <QRubberBand>
 #include <QLabel>
+#include <QTextEdit>
 #include <QMouseEvent>
 #include "common.h"
 
@@ -54,6 +55,17 @@ private:
     QImage img;
     QString file_name;
     SelectionArea::Ptr selection_area;
+};
+
+class LogWindow : public QTextEdit
+{
+    Q_OBJECT
+
+public:
+    explicit LogWindow(QWidget* parent = 0) : QTextEdit(parent) {};
+
+protected:
+    void contextMenuEvent(QContextMenuEvent * ev) override;
 };
 
 #endif // MY_WIDGETS_H

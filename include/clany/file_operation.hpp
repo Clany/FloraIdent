@@ -42,7 +42,7 @@
 
 #include "cls_defs.h"
 
-_CLANY_BEGIN
+_CLS_BEGIN
 typedef istreambuf_iterator<char> ifsbuf_iter;
 
 #if CLS_HAS_EXCEPT
@@ -134,6 +134,6 @@ inline int countLine(const string& file_name)
 
     return count;
 }
-_CLANY_END
+_CLS_END
 
 #endif // CLS_FILE_HANDLE_HPP

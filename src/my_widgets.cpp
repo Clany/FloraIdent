@@ -3,6 +3,7 @@
 #include <QSizeGrip>
 #include <QGroupBox>
 #include <QToolTip>
+#include <QMenu>
 #include <iostream>
 #include "my_widgets.h"
 #include "mainwindow.h"
@@ -147,4 +148,15 @@ bool ImageLabel::getSelectionArea(QRect& area, std::string& area_string, bool is
 
     area = QRect();
     return false;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+// Log Window
+void LogWindow::contextMenuEvent(QContextMenuEvent * ev)
+{
+    QMenu *menu = createStandardContextMenu();
+    QAction* clear_act = menu->addAction("Clear All");
+    connect(clear_act, &QAction::triggered, this, &LogWindow::clear);
+    menu->exec(ev->globalPos());
+    delete menu;
 }

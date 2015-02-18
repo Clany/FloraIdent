@@ -30,15 +30,23 @@
 #include <functional>
 #include "cls_defs.h"
 
-_CLANY_BEGIN
+_CLS_BEGIN
 template<typename T>
 class Factory
 {
+    using Ptr = unique_ptr<T>;
+
 public:
     template<typename... Args>
-    unique_ptr<T> operator()(Args&&... args)
+    Ptr operator()(Args&&... args)
     {
         return make_unique<T>(forward<Args>(args)...);
+    };
+
+    template<typename... Args>
+    Ptr create(Args&&... args)
+    {
+        return (*this)(forward<Args>(args)...);
     };
 };
 
@@ -92,6 +100,12 @@ public:
         return nullptr;
     }
 
+    template<typename T, typename... Args>
+    static BasePtr create(Args&&... args)
+    {
+        return Factory<T>()(forward<Args>(args)...);
+    }
+
 private:
     ObjFactory() {};
     ObjFactory(const ObjFactory&) = delete;
@@ -105,7 +119,7 @@ private:
 
     map<IDType, Creator> creators_map;
 };
-_CLANY_END
+_CLS_END
 
 
 // Use these macro in *.cpp file
@@ -121,7 +135,7 @@ namespace { \
 }
 
 // Custom creator
-#define REGISTER_TO_FACTORY_WITH_CREATOR(BaseType, DerivedType, Creator) \
+#define REGISTER_TO_FACTORY_WITH_CTOR(BaseType, DerivedType, Creator) \
 namespace { \
     const bool ADD_##DerivedType = cls::ObjFactory<BaseType, string, Creator>::addType<DerivedType>(#DerivedType); \
 }

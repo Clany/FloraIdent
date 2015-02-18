@@ -30,7 +30,7 @@
 #include <functional>
 #include "traits.hpp"
 
-namespace cls {
+_CLS_BEGIN
 //////////////////////////////////////////////////////////////////////////////////////////
 // Bring all overloaded std funtions to current namespace
 using std::all_of;
@@ -98,6 +98,24 @@ inline size_t container_size(T(&)[N])
     return N;
 }
 
+// Helpler function that can print contents of a STL container
+template<typename T,
+         template<typename Ele, typename Alloc = std::allocator<Ele>> class Container,
+         typename U = enable_if_t<is_container<Container<T>>::value>>
+inline ostream& operator<<(ostream& os, const Container<T>& c)
+{
+    os << "[";
+    auto iter      = begin(c);
+    auto last_iter = next(iter, distance(begin(c), end(c)) - 1);
+    while (iter != last_iter) {
+        os << *iter++ << ", ";
+    }
+    os << *last_iter << "]";
+
+    return os;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
 // Non-modifying sequence operations
 template<typename Container, typename Func,
          typename U = enable_if_t<is_container<Container>::value>>
@@ -939,6 +957,6 @@ inline T inner_product(Container1&& container1, Container2&& container2,
     return inner_product(begin(container1), end(container1),
                          begin(container2), init, sum_op, mul_op);
 }
-} // End of namespace std
+_CLS_END
 
 #endif // CLS_ALGORITHM_HPP

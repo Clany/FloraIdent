@@ -129,8 +129,8 @@ using llong  = long long;
 #define CPP11_SUPPORT (GCC_VERSION >= 408 || CLANG_VERSION >= 303 || _MSC_VER >= 1900)
 #define CPP14_SUPPORT (GCC_VERSION >= 409 || CLANG_VERSION >= 304 || _MSC_VER >= 1900)
 
-_CLANY_BEGIN
+_CLS_BEGIN
 using namespace std;
-_CLANY_END
+_CLS_END
 
 #endif // CLS_CLANY_DEFS_H

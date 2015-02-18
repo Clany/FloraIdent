@@ -29,7 +29,7 @@
 #include <type_traits>
 #include "cls_defs.h"
 
-_CLANY_BEGIN
+_CLS_BEGIN
 //////////////////////////////////////////////////////////////////////////////////////////
 // Common type traits
 template<bool B, class T = void>
@@ -216,6 +216,6 @@ struct is_random_access_iterator<T, true>
     : integral_constant<bool, is_base_of<random_access_iterator_tag,
       iterator_category_t<T>>::value>
 {};
-_CLANY_END
+_CLS_END
 
 #endif // CLS_TRAITS_HPP

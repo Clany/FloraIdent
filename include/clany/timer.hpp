@@ -31,7 +31,7 @@
 #include "cls_defs.h"
 
 
-_CLANY_BEGIN
+_CLS_BEGIN
 class ScopeTimer {
     using sys_clock = chrono::system_clock;
     using seconds   = chrono::duration<double>;
@@ -134,6 +134,6 @@ private:
     bool    is_stopped;
     bool    need_print;
 };
-_CLANY_END
+_CLS_END
 
 #endif // CLS_TIMER_HPP

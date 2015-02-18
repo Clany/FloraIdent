@@ -11,16 +11,15 @@ _CLANY_BEGIN
 struct FloraIdentSettings
 {
     FloraIdentSettings()
-      : gist_params(DEFAULT_GIST_PARAMS), learning_rate(30),
-        clear_precomp_features(false) {
+      : gist_params(DEFAULT_GIST_PARAMS) {
         used_features.fill(true);
     }
 
     array<bool, FEATURES_NUM> used_features;
     GISTParams gist_params;
-    int learning_rate;
-    bool clear_precomp_features;
-    bool display_file_name;
+    int learning_rate = 30;
+    bool clear_precomp_features = false;
+    bool display_file_name = false;
 };
 
 class FloraIdentApp {
